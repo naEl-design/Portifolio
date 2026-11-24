@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { motion, MotionConfig } from 'motion/react';
 import { LanguageProvider } from './context/LanguageContext';
+import { AnimatedBackground } from './components/AnimatedBackground';
 import { ScrollProgress } from './components/ScrollProgress';
 import { CustomCursor } from './components/CustomCursor';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { MotionMarquee } from './components/MotionMarquee';
 import { AboutSection } from './components/AboutSection';
 import { SkillsSection } from './components/SkillsSection';
 import { ServicesSection } from './components/ServicesSection';
@@ -65,27 +67,33 @@ export default function App() {
         <ScrollProgress />
         <CustomCursor />
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="min-h-screen flex flex-col bg-white text-slate-900 dark:bg-[#06110C] dark:text-white transition-colors duration-300"
-        >
-          <Navbar theme={theme} onToggleTheme={handleToggleTheme} />
+        <div className="relative min-h-screen flex flex-col bg-white text-slate-900 dark:bg-[#06110C] dark:text-white transition-colors duration-300">
+          <AnimatedBackground />
 
-          <main className="flex-1">
-            <Hero />
-            <AboutSection />
-            <SkillsSection />
-            <ServicesSection />
-            <ProjectsSection />
-            <ExperienceSection />
-            <DesignProcessSection />
-            <ContactSection />
-          </main>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="relative z-10 min-h-screen flex flex-col"
+          >
+            <Navbar theme={theme} onToggleTheme={handleToggleTheme} />
 
-          <Footer />
-        </motion.div>
+            <main className="flex-1">
+              <Hero />
+              <MotionMarquee />
+              <AboutSection />
+              <SkillsSection />
+              <ServicesSection />
+              <ProjectsSection />
+              <MotionMarquee reverse />
+              <ExperienceSection />
+              <DesignProcessSection />
+              <ContactSection />
+            </main>
+
+            <Footer />
+          </motion.div>
+        </div>
       </MotionConfig>
     </LanguageProvider>
   );

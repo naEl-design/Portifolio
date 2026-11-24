@@ -198,38 +198,28 @@ export const PROJECTS: ProjectItem[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/* 7. EXPERIENCE & EDUCATION (Editable Placeholders)                          */
+/* 7. EXPERIENCE & EDUCATION                                                  */
 /* -------------------------------------------------------------------------- */
 export const TIMELINE_ITEMS: TimelineEntry[] = [
   {
-    id: 'exp-frontend',
-    type: 'Experience',
-    title: 'Frontend Developer',
-    organization: 'Company / Organization (Editable Placeholder)',
-    period: 'Year – Year',
-    description:
-      'Add your responsibilities and achievements here—such as building responsive interfaces, collaborating on component libraries, and improving page usability.',
-    isPlaceholder: true,
-  },
-  {
-    id: 'exp-uiux',
-    type: 'Experience',
-    title: 'UI/UX Designer',
-    organization: 'Company / Organization (Editable Placeholder)',
-    period: 'Year – Year',
-    description:
-      'Add your design work here—such as user research, wireframing user flows, creating interactive Figma prototypes, and partnering with developers.',
-    isPlaceholder: true,
-  },
-  {
-    id: 'edu-software',
+    id: 'edu-intango',
     type: 'Education',
-    title: 'Software Development',
-    organization: 'Institution Name (Editable Placeholder)',
-    period: 'Year – Year',
+    title: 'Software Development (SWD)',
+    organization: 'Intango Technical School',
+    period: 'Level 4 | S5',
     description:
-      'Add your academic program, coursework focus, or key learning milestones in software development and interface design.',
-    isPlaceholder: true,
+      'Pursuing Level 4 in Software Development in Kigali, Rwanda—building a strong foundation in frontend development, programming, databases, system design, and problem-solving.',
+    isPlaceholder: false,
+  },
+  {
+    id: 'exp-frontend-uiux',
+    type: 'Experience',
+    title: 'Frontend Development & UI/UX Craft',
+    organization: 'Academic Studies & Personal Projects',
+    period: 'Kigali, Rwanda',
+    description:
+      'Combining clean HTML5, CSS3, and JavaScript code with thoughtful Figma wireframing and responsive design to create websites that are responsive, intuitive, and user-friendly.',
+    isPlaceholder: false,
   },
 ];
 

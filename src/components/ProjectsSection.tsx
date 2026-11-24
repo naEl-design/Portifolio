@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowUpRight, Code2, ExternalLink, LayoutTemplate, Smartphone } from 'lucide-react';
+import { ArrowUpRight, Code2, LayoutTemplate, Smartphone } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import {
   PROJECTS,
@@ -8,6 +8,7 @@ import {
   ProjectItem,
 } from '../data/portfolioConfig';
 import { Reveal, StaggerCard } from './Reveal';
+import { TiltCard } from './TiltCard';
 
 const AVAILABLE_CATEGORIES: Array<'All' | ProjectCategory> = [
   'All',
@@ -64,23 +65,23 @@ function ProjectThumbnail({
           {project.thumbnailVariant === 'finance' && (
             <div className="space-y-2.5 my-auto pt-3">
               <div className="grid grid-cols-3 gap-2">
-                <div className="h-9 rounded-[8px] bg-white dark:bg-[#0C1D15] border border-slate-200 dark:border-emerald-900/60" />
-                <div className="h-9 rounded-[8px] bg-emerald-100/70 dark:bg-[#16A34A]/20 border border-emerald-300/60 dark:border-emerald-700/50" />
-                <div className="h-9 rounded-[8px] bg-orange-100/80 dark:bg-[#EA580C]/25 border border-orange-300/60 dark:border-orange-700/50" />
+                <div className="h-9 rounded-[8px] bg-white dark:bg-[#0C1D15] border border-slate-200 dark:border-emerald-900/60 transition-transform duration-300 group-hover:-translate-y-0.5" />
+                <div className="h-9 rounded-[8px] bg-emerald-100/70 dark:bg-[#16A34A]/20 border border-emerald-300/60 dark:border-emerald-700/50 transition-transform duration-300 delay-75 group-hover:-translate-y-0.5" />
+                <div className="h-9 rounded-[8px] bg-orange-100/80 dark:bg-[#EA580C]/25 border border-orange-300/60 dark:border-orange-700/50 transition-transform duration-300 delay-150 group-hover:-translate-y-0.5" />
               </div>
               <div className="h-14 rounded-[8px] bg-white dark:bg-[#0C1D15] border border-slate-200 dark:border-emerald-900/60 flex items-end gap-1.5 p-2">
-                <div className="w-1/5 h-4 rounded-xs bg-emerald-200 dark:bg-emerald-800" />
-                <div className="w-1/5 h-7 rounded-xs bg-[#16A34A]/70" />
-                <div className="w-1/5 h-5 rounded-xs bg-emerald-200 dark:bg-emerald-800" />
-                <div className="w-1/5 h-9 rounded-xs bg-[#EA580C]/80" />
-                <div className="w-1/5 h-6 rounded-xs bg-[#16A34A]/60" />
+                <div className="w-1/5 h-4 origin-bottom rounded-xs bg-emerald-200 dark:bg-emerald-800 transition-transform duration-300 group-hover:scale-y-125" />
+                <div className="w-1/5 h-7 origin-bottom rounded-xs bg-[#16A34A]/70 transition-transform duration-300 delay-75 group-hover:scale-y-110" />
+                <div className="w-1/5 h-5 origin-bottom rounded-xs bg-emerald-200 dark:bg-emerald-800 transition-transform duration-300 delay-100 group-hover:scale-y-125" />
+                <div className="w-1/5 h-9 origin-bottom rounded-xs bg-[#EA580C]/80 transition-transform duration-300 delay-150 group-hover:scale-y-110" />
+                <div className="w-1/5 h-6 origin-bottom rounded-xs bg-[#16A34A]/60 transition-transform duration-300 delay-200 group-hover:scale-y-125" />
               </div>
             </div>
           )}
 
           {project.thumbnailVariant === 'portfolio' && (
             <div className="space-y-2.5 my-auto pt-3">
-              <div className="h-10 rounded-[8px] bg-white dark:bg-[#0C1D15] border border-slate-200 dark:border-emerald-900/60 p-2 flex items-center justify-between">
+              <div className="h-10 rounded-[8px] bg-white dark:bg-[#0C1D15] border border-slate-200 dark:border-emerald-900/60 p-2 flex items-center justify-between transition-transform duration-300 group-hover:-translate-y-0.5">
                 <div className="h-2.5 w-16 rounded bg-[#EA580C]/70" />
                 <div className="flex gap-1.5">
                   <div className="h-2 w-6 rounded bg-emerald-200 dark:bg-emerald-800" />
@@ -88,8 +89,8 @@ function ProjectThumbnail({
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="h-14 rounded-[8px] bg-white dark:bg-[#0C1D15] border border-slate-200 dark:border-emerald-900/60" />
-                <div className="h-14 rounded-[8px] bg-emerald-50 dark:bg-[#16A34A]/15 border border-emerald-200 dark:border-emerald-800/60" />
+                <div className="h-14 rounded-[8px] bg-white dark:bg-[#0C1D15] border border-slate-200 dark:border-emerald-900/60 transition-transform duration-300 delay-75 group-hover:-translate-y-0.5" />
+                <div className="h-14 rounded-[8px] bg-emerald-50 dark:bg-[#16A34A]/15 border border-emerald-200 dark:border-emerald-800/60 transition-transform duration-300 delay-150 group-hover:-translate-y-0.5" />
               </div>
             </div>
           )}
@@ -159,7 +160,7 @@ export function ProjectsSection() {
   return (
     <section
       id="projects"
-      className="py-20 md:py-28 border-t border-slate-200 dark:border-emerald-900/40 bg-white dark:bg-[#06110C]"
+      className="py-20 md:py-28 border-t border-slate-200 dark:border-emerald-900/40 bg-white/80 dark:bg-[#06110C]/75"
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-8 space-y-12">
         <Reveal>
@@ -230,23 +231,33 @@ export function ProjectsSection() {
               {filteredProjects.map((project, index) => {
                 const localized = getLocalizedProject(project);
                 return (
-                  <motion.article
-                    key={project.id}
-                    layout
-                    data-cursor="expand"
-                    initial={{ opacity: 0, y: 18, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.96 }}
-                    transition={{ duration: 0.32, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                    className="group rounded-[20px] border border-slate-200 dark:border-emerald-900/50 bg-[#F8FAF9] dark:bg-[#0C1D15] overflow-hidden flex flex-col transition-all duration-300 md:hover:-translate-y-2 hover:border-[#EA580C]/80 dark:hover:border-[#FB923C]/80 hover:shadow-[0_22px_44px_-18px_rgba(234,88,12,0.28)] dark:hover:shadow-[0_22px_48px_-18px_rgba(0,0,0,0.85)]"
-                  >
+                  <TiltCard key={project.id} maxTilt={4} className="h-full">
+                    <motion.article
+                      layout
+                      data-cursor="expand"
+                      initial={{ opacity: 0, y: 18, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.96 }}
+                      transition={{ duration: 0.32, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                      className="group relative h-full rounded-[20px] border border-slate-200 dark:border-emerald-900/50 bg-[#F8FAF9]/95 dark:bg-[#0C1D15]/95 overflow-hidden flex flex-col transition-all duration-300 hover:border-[#EA580C]/80 dark:hover:border-[#FB923C]/80 hover:shadow-[0_22px_44px_-18px_rgba(234,88,12,0.28)] dark:hover:shadow-[0_22px_48px_-18px_rgba(0,0,0,0.85)]"
+                    >
+                      {/* Cursor-following subtle radial spotlight */}
+                      <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{
+                          background:
+                            'radial-gradient(360px circle at var(--spot-x, 50%) var(--spot-y, 50%), rgba(234, 88, 12, 0.1), transparent 65%)',
+                        }}
+                      />
+
                     {/* Thumbnail */}
                     <a
                       href={project.liveUrl}
                       target={project.liveUrl !== '#' ? '_blank' : undefined}
                       rel={project.liveUrl !== '#' ? 'noreferrer' : undefined}
                       onClick={(e) => handleLinkClick(e, project.liveUrl, project.id)}
-                      className="block w-full h-56 overflow-hidden border-b border-slate-200 dark:border-emerald-900/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
+                      className="relative z-20 block w-full h-56 overflow-hidden border-b border-slate-200 dark:border-emerald-900/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
                     >
                       <ProjectThumbnail
                         project={project}
@@ -257,14 +268,22 @@ export function ProjectsSection() {
                     </a>
 
                     {/* Card Body */}
-                    <div className="p-6 flex flex-col flex-1 justify-between gap-5">
+                    <div className="relative z-20 p-6 flex flex-col flex-1 justify-between gap-5">
                       <div>
                         <p className="text-xs font-semibold text-[#15803D] dark:text-[#4ADE80] mb-1.5">
                           {localized.categoryLabel}
                         </p>
 
                         <h3 className="font-display text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#C2410C] dark:group-hover:text-[#FB923C] transition-colors">
-                          {localized.name}
+                          <a
+                            href={project.liveUrl}
+                            target={project.liveUrl !== '#' ? '_blank' : undefined}
+                            rel={project.liveUrl !== '#' ? 'noreferrer' : undefined}
+                            onClick={(e) => handleLinkClick(e, project.liveUrl, project.id)}
+                            className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C] rounded-xs"
+                          >
+                            {localized.name}
+                          </a>
                         </h3>
 
                         <p className="mt-2 text-sm text-slate-600 dark:text-emerald-100/75 leading-relaxed">
@@ -285,23 +304,6 @@ export function ProjectsSection() {
                           ))}
                         </div>
 
-                        {/* Action Link (Live Demo only) */}
-                        <div className="pt-4 border-t border-slate-200 dark:border-emerald-900/50">
-                          <a
-                            href={project.liveUrl}
-                            target={project.liveUrl !== '#' ? '_blank' : undefined}
-                            rel={project.liveUrl !== '#' ? 'noreferrer' : undefined}
-                            onClick={(e) => handleLinkClick(e, project.liveUrl, project.id)}
-                            className="group/btn w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold rounded-[12px] bg-[#C2410C] hover:bg-[#9A3412] dark:bg-[#EA580C] dark:hover:bg-[#C2410C] text-white shadow-xs hover:shadow-[0_8px_20px_-6px_rgba(234,88,12,0.55)] hover:-translate-y-0.5 transition-all duration-200 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
-                          >
-                            <span>{t.projects.liveDemo}</span>
-                            <ExternalLink
-                              className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
-                              aria-hidden="true"
-                            />
-                          </a>
-                        </div>
-
                         {noticeProjectId === project.id && (
                           <p className="text-[11px] text-slate-600 dark:text-emerald-100/75 bg-white dark:bg-[#06110C] border border-slate-200 dark:border-emerald-900/60 rounded-[8px] px-3 py-2">
                             Placeholder link (<code className="font-mono">#</code>). Replace{' '}
@@ -311,43 +313,49 @@ export function ProjectsSection() {
                         )}
                       </div>
                     </div>
-                  </motion.article>
+                    </motion.article>
+                  </TiltCard>
                 );
               })}
             </AnimatePresence>
           </motion.div>
         </Reveal>
 
-        {/* Project Build Highlights Cards */}
+        {/* Project Build Highlights Floating Moving Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
           {t.projects.highlights.map((item, idx) => {
             const meta = HIGHLIGHT_META[idx] ?? HIGHLIGHT_META[0];
             const Icon = meta.icon;
             const isOrange = meta.accent === 'orange';
             return (
-              <StaggerCard
+              <div
                 key={idx}
-                index={idx}
-                className="rounded-[20px] border border-slate-200 dark:border-emerald-900/50 bg-[#F8FAF9] dark:bg-[#0C1D15] p-5 flex items-start gap-3.5 transition-colors hover:border-[#EA580C]/70 dark:hover:border-[#FB923C]/70 hover:shadow-md"
+                style={{ animationDelay: `${idx * 0.7}s` }}
+                className="animate-card-bob"
               >
-                <div
-                  className={`w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 ${
-                    isOrange
-                      ? 'bg-orange-100 dark:bg-[#EA580C]/20 text-[#C2410C] dark:text-[#FB923C]'
-                      : 'bg-emerald-100 dark:bg-[#16A34A]/20 text-[#15803D] dark:text-[#4ADE80]'
-                  }`}
+                <StaggerCard
+                  index={idx}
+                  className="h-full rounded-[20px] border border-slate-200 dark:border-emerald-900/50 bg-[#F8FAF9]/95 dark:bg-[#0C1D15]/95 p-5 flex items-start gap-3.5 transition-colors hover:border-[#EA580C]/70 dark:hover:border-[#FB923C]/70 hover:shadow-md"
                 >
-                  <Icon className="w-4 h-4" aria-hidden="true" />
-                </div>
-                <div>
-                  <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1 text-xs text-slate-600 dark:text-emerald-100/75 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </StaggerCard>
+                  <div
+                    className={`w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 ${
+                      isOrange
+                        ? 'bg-orange-100 dark:bg-[#EA580C]/20 text-[#C2410C] dark:text-[#FB923C]'
+                        : 'bg-emerald-100 dark:bg-[#16A34A]/20 text-[#15803D] dark:text-[#4ADE80]'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-600 dark:text-emerald-100/75 leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </StaggerCard>
+              </div>
             );
           })}
         </div>

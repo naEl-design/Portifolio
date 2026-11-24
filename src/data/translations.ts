@@ -88,12 +88,16 @@ export interface TranslationDictionary {
   experience: {
     eyebrow: string;
     heading: string;
-    helperPrefix: string;
-    items: {
-      typeLabel: string;
-      title: string;
-      organization: string;
-      period: string;
+    paragraphs: string[];
+    academicHeading: string;
+    schoolName: string;
+    tradeLabel: string;
+    levelLabel: string;
+    locationLabel: string;
+    academicPillars: string[];
+    skillsHeading: string;
+    frontendSkills: {
+      name: string;
       description: string;
     }[];
   };
@@ -349,33 +353,33 @@ export const EN_DICTIONARY: TranslationDictionary = {
   },
   experience: {
     eyebrow: 'Experience & Education',
-    heading: 'Background & academic foundation.',
-    helperPrefix: 'Editable timeline entries. Update companies, institutions, years, and responsibilities in',
-    items: [
-      {
-        typeLabel: 'Experience',
-        title: 'Frontend Developer',
-        organization: 'Company / Organization (Editable Placeholder)',
-        period: 'Year – Year',
-        description:
-          'Add your responsibilities and achievements here—such as building responsive interfaces, collaborating on component libraries, and improving page usability.',
-      },
-      {
-        typeLabel: 'Experience',
-        title: 'UI/UX Designer',
-        organization: 'Company / Organization (Editable Placeholder)',
-        period: 'Year – Year',
-        description:
-          'Add your design work here—such as user research, wireframing user flows, creating interactive Figma prototypes, and partnering with developers.',
-      },
-      {
-        typeLabel: 'Education',
-        title: 'Software Development',
-        organization: 'Institution Name (Editable Placeholder)',
-        period: 'Year – Year',
-        description:
-          'Add your academic program, coursework focus, or key learning milestones in software development and interface design.',
-      },
+    heading: 'Background & Academic Foundation',
+    paragraphs: [
+      'I am a Software Development student at Intango Technical School, based in Kigali, Rwanda. I am currently pursuing Level 4 in Software Development, building a strong foundation in frontend development, programming, databases, system design, and problem-solving.',
+      'Through my academic studies and personal projects, I have developed practical skills in HTML, CSS, JavaScript, responsive web design, and UI/UX design. I enjoy combining clean, well-structured code with thoughtful visual design to create websites that are responsive, intuitive, and user-friendly.',
+    ],
+    academicHeading: 'Academic Foundation',
+    schoolName: 'Intango Technical School',
+    tradeLabel: 'Trade: Software Development (SWD)',
+    levelLabel: 'Level 4 | S5',
+    locationLabel: 'Kigali, Rwanda',
+    academicPillars: [
+      'Frontend Development',
+      'Programming',
+      'Databases',
+      'System Design',
+      'Problem-Solving',
+    ],
+    skillsHeading: 'Frontend Skills',
+    frontendSkills: [
+      { name: 'HTML5', description: 'Semantic and accessible web structure' },
+      { name: 'CSS3', description: 'Responsive layouts, Flexbox, Grid, and animations' },
+      { name: 'JavaScript', description: 'Interactive and dynamic web experiences' },
+      { name: 'Figma', description: 'Wireframing, prototyping, and interface design' },
+      { name: 'Responsive Web Design', description: 'Mobile, tablet, and desktop layouts' },
+      { name: 'UI/UX Design', description: 'User-centered design and usability' },
+      { name: 'Wireframing', description: 'Planning interfaces and user flows' },
+      { name: 'Prototyping', description: 'Creating interactive design concepts' },
     ],
   },
   process: {
@@ -581,30 +585,33 @@ export const BUILTIN_TRANSLATIONS: Record<string, TranslationDictionary> = {
     },
     experience: {
       eyebrow: 'Uburambe n’Amashuri',
-      heading: 'Amateka y’akazi n’amasomo.',
-      helperPrefix: 'Aya makuru ashobora guhindurwa mu buryo bworoshye muri',
-      items: [
-        {
-          typeLabel: 'Uburambe',
-          title: 'Frontend Developer',
-          organization: 'Ikigo / Umuryango (Ushobora Kuhahindura)',
-          period: 'Umwaka – Umwaka',
-          description: 'Shyiramo inshingano n’ibikorwa wagezeho—nk’ukubaka imbuga zikora neza no kunoza imikorere yazo.',
-        },
-        {
-          typeLabel: 'Uburambe',
-          title: 'UI/UX Designer',
-          organization: 'Ikigo / Umuryango (Ushobora Kuhahindura)',
-          period: 'Umwaka – Umwaka',
-          description: 'Shyiramo ibikorwa byo gushushanya—nk’ubushakashatsi ku bakoresha no gukora porototayipu muri Figma.',
-        },
-        {
-          typeLabel: 'Amashuri',
-          title: 'Software Development',
-          organization: 'Izina ry’Ishuri (Ushobora Kuhahindura)',
-          period: 'Umwaka – Umwaka',
-          description: 'Shyiramo amasomo wize n’ibyo wibanzeho mu bijyanye no kubaka porogaramu n’imbuga.',
-        },
+      heading: 'Amateka n’Umusingi w’Amasomo',
+      paragraphs: [
+        'Ndi umunyeshuri wa Software Development muri Intango Technical School, i Kigali mu Rwanda. Kuri ubu ndi kwiga mu Cyiciro cya 4 (Level 4) mu Ishami rya Software Development, nubaka ubumenyi bukomeye mu kubaka imbuga (frontend), porogaramu, ububiko bw’amakuru (databases), imiterere ya sisitemu no gukemura ibibazo.',
+        'Binyuze mu masomo n’imishinga yanjye bwite, nungutse ubumenyi bukoreshwa muri HTML, CSS, JavaScript, imbuga zikora ku bikoresho byose na UI/UX design. Nkunda guhuza kode isukuye n’ubugeni bw’imigaragarire bunoze kugira ngo nkore imbuga zoroshye gukoresha.',
+      ],
+      academicHeading: 'Umusingi w’Amasomo',
+      schoolName: 'Intango Technical School',
+      tradeLabel: 'Ishami: Software Development (SWD)',
+      levelLabel: 'Level 4 | S5',
+      locationLabel: 'Kigali, Rwanda',
+      academicPillars: [
+        'Frontend Development',
+        'Porogaramu',
+        'Databases',
+        'Imiterere ya Sisitemu',
+        'Gukemura Ibibazo',
+      ],
+      skillsHeading: 'Ubumenyi bwa Frontend',
+      frontendSkills: [
+        { name: 'HTML5', description: 'Imiterere y’urubuga isobanutse kandi igera kuri bose' },
+        { name: 'CSS3', description: 'Imiterere ihindagurika, Flexbox, Grid n’imikorere igenda' },
+        { name: 'JavaScript', description: 'Imikorere ikorana n’ukoresha urubuga mu buryo bunoze' },
+        { name: 'Figma', description: 'Ibishushanyo mbonera, porototayipu n’imigaragarire' },
+        { name: 'Responsive Web Design', description: 'Imiterere iboneye kuri telefoni, tableti na mudasobwa' },
+        { name: 'UI/UX Design', description: 'Gushushanya byibanda ku mukoresha n’uburyo bworoshye' },
+        { name: 'Wireframing', description: 'Gutegura imiterere y’amapaji n’inzira z’ukoresha' },
+        { name: 'Prototyping', description: 'Gukora porototayipu zishobora kugeragezwa' },
       ],
     },
     process: {
@@ -807,30 +814,33 @@ export const BUILTIN_TRANSLATIONS: Record<string, TranslationDictionary> = {
     },
     experience: {
       eyebrow: 'Expérience & Formation',
-      heading: 'Parcours & formation académique.',
-      helperPrefix: 'Entrées modifiables de la chronologie. Mettez à jour ces informations dans',
-      items: [
-        {
-          typeLabel: 'Expérience',
-          title: 'Développeur Frontend',
-          organization: 'Entreprise / Organisation (Modifiable)',
-          period: 'Année – Année',
-          description: 'Ajoutez ici vos responsabilités et réalisations : intégration réactive, composants et amélioration de l’ergonomie.',
-        },
-        {
-          typeLabel: 'Expérience',
-          title: 'Designer UI/UX',
-          organization: 'Entreprise / Organisation (Modifiable)',
-          period: 'Année – Année',
-          description: 'Ajoutez ici vos projets de design : recherche utilisateur, maquettes, prototypes Figma et collaboration technique.',
-        },
-        {
-          typeLabel: 'Formation',
-          title: 'Développement Logiciel',
-          organization: 'Établissement (Modifiable)',
-          period: 'Année – Année',
-          description: 'Ajoutez votre programme académique, spécialisation ou étapes clés en développement logiciel et design d’interface.',
-        },
+      heading: 'Parcours & Fondation Académique',
+      paragraphs: [
+        'Je suis étudiant en Développement Logiciel à Intango Technical School, basé à Kigali, au Rwanda. Je poursuis actuellement le Niveau 4 en Développement Logiciel, en bâtissant une solide base en développement frontend, programmation, bases de données, conception de systèmes et résolution de problèmes.',
+        'À travers mes études académiques et mes projets personnels, j’ai développé des compétences pratiques en HTML, CSS, JavaScript, design web réactif et design UI/UX. J’aime associer un code propre et bien structuré à un design visuel réfléchi pour créer des sites réactifs, intuitifs et conviviaux.',
+      ],
+      academicHeading: 'Fondation Académique',
+      schoolName: 'Intango Technical School',
+      tradeLabel: 'Filière : Software Development (SWD)',
+      levelLabel: 'Level 4 | S5',
+      locationLabel: 'Kigali, Rwanda',
+      academicPillars: [
+        'Développement Frontend',
+        'Programmation',
+        'Bases de données',
+        'Conception de systèmes',
+        'Résolution de problèmes',
+      ],
+      skillsHeading: 'Compétences Frontend',
+      frontendSkills: [
+        { name: 'HTML5', description: 'Structure web sémantique et accessible' },
+        { name: 'CSS3', description: 'Mises en page réactives, Flexbox, Grid et animations' },
+        { name: 'JavaScript', description: 'Expériences web interactives et dynamiques' },
+        { name: 'Figma', description: 'Wireframing, prototypage et design d’interface' },
+        { name: 'Responsive Web Design', description: 'Mises en page mobile, tablette et bureau' },
+        { name: 'UI/UX Design', description: 'Design centré utilisateur et ergonomie' },
+        { name: 'Wireframing', description: 'Planification des interfaces et parcours utilisateurs' },
+        { name: 'Prototyping', description: 'Création de concepts interactifs' },
       ],
     },
     process: {
@@ -1033,30 +1043,33 @@ export const BUILTIN_TRANSLATIONS: Record<string, TranslationDictionary> = {
     },
     experience: {
       eyebrow: 'Uzoefu na Elimu',
-      heading: 'Historia ya kazi na msingi wa kitaaluma.',
-      helperPrefix: 'Vipengele hivi vinaweza kuhaririwa kwa urahisi ndani ya',
-      items: [
-        {
-          typeLabel: 'Uzoefu',
-          title: 'Frontend Developer',
-          organization: 'Kampuni / Shirika (Hariri Hapa)',
-          period: 'Mwaka – Mwaka',
-          description: 'Ongeza majukumu na mafanikio yako hapa—kama vile kujenga kurasa zinazojibika na kuboresha urahisi wa matumizi.',
-        },
-        {
-          typeLabel: 'Uzoefu',
-          title: 'UI/UX Designer',
-          organization: 'Kampuni / Shirika (Hariri Hapa)',
-          period: 'Mwaka – Mwaka',
-          description: 'Ongeza kazi zako za ubunifu hapa—kama utafiti wa watumiaji, wireframes na mifano ya Figma.',
-        },
-        {
-          typeLabel: 'Elimu',
-          title: 'Software Development',
-          organization: 'Jina la Chuo / Taasisi (Hariri Hapa)',
-          period: 'Mwaka – Mwaka',
-          description: 'Ongeza programu yako ya masomo au mafanikio muhimu katika usanidi wa programu na ubunifu wa kiolesura.',
-        },
+      heading: 'Historia na Msingi wa Kitaaluma',
+      paragraphs: [
+        'Mimi ni mwanafunzi wa Software Development katika Intango Technical School, ninayeishi Kigali, Rwanda. Kwa sasa nasomea Kiwango cha 4 (Level 4) katika Software Development, nikijenga msingi imara katika uundaji wa frontend, programu, hifadhidata, usanifu wa mifumo na utatuzi wa matatizo.',
+        'Kupitia masomo yangu na miradi binafsi, nimekuza ujuzi wa vitendo katika HTML, CSS, JavaScript, muundo wa tovuti zinazojibika na UI/UX design. Napenda kuunganisha msimbo safi uliopangwa vizuri na ubunifu makini ili kuunda tovuti rahisi kutumia.',
+      ],
+      academicHeading: 'Msingi wa Kitaaluma',
+      schoolName: 'Intango Technical School',
+      tradeLabel: 'Fani: Software Development (SWD)',
+      levelLabel: 'Level 4 | S5',
+      locationLabel: 'Kigali, Rwanda',
+      academicPillars: [
+        'Frontend Development',
+        'Upangaji Programu',
+        'Hifadhidata',
+        'Usanifu wa Mifumo',
+        'Utatuzi wa Matatizo',
+      ],
+      skillsHeading: 'Ujuzi wa Frontend',
+      frontendSkills: [
+        { name: 'HTML5', description: 'Muundo wa wavuti wenye maana na ufikivu bora' },
+        { name: 'CSS3', description: 'Mipangilio inayojibika, Flexbox, Grid na michoro' },
+        { name: 'JavaScript', description: 'Uzoefu wa wavuti wenye mwingiliano na uhai' },
+        { name: 'Figma', description: 'Wireframing, prototyping na ubunifu wa kiolesura' },
+        { name: 'Responsive Web Design', description: 'Mipangilio ya simu, tableti na kompyuta' },
+        { name: 'UI/UX Design', description: 'Ubunifu unaomlenga mtumiaji na urahisi wa matumizi' },
+        { name: 'Wireframing', description: 'Kupanga violesura na mtiririko wa watumiaji' },
+        { name: 'Prototyping', description: 'Kuunda dhana za ubunifu zinazoingiliana' },
       ],
     },
     process: {
@@ -1259,30 +1272,33 @@ export const BUILTIN_TRANSLATIONS: Record<string, TranslationDictionary> = {
     },
     experience: {
       eyebrow: 'Experiencia y Educación',
-      heading: 'Trayectoria y base académica.',
-      helperPrefix: 'Entradas editables de la línea de tiempo. Actualízalas en',
-      items: [
-        {
-          typeLabel: 'Experiencia',
-          title: 'Frontend Developer',
-          organization: 'Empresa / Organización (Editable)',
-          period: 'Año – Año',
-          description: 'Agrega aquí tus responsabilidades y logros: interfaces responsivas, componentes y usabilidad.',
-        },
-        {
-          typeLabel: 'Experiencia',
-          title: 'UI/UX Designer',
-          organization: 'Empresa / Organización (Editable)',
-          period: 'Año – Año',
-          description: 'Agrega aquí tu trabajo de diseño: investigación, wireframes y prototipos interactivos en Figma.',
-        },
-        {
-          typeLabel: 'Educación',
-          title: 'Software Development',
-          organization: 'Institución (Editable)',
-          period: 'Año – Año',
-          description: 'Agrega aquí tu programa académico o hitos de aprendizaje en desarrollo de software y diseño.',
-        },
+      heading: 'Trayectoria y Base Académica',
+      paragraphs: [
+        'Soy estudiante de Desarrollo de Software en Intango Technical School, con base en Kigali, Ruanda. Actualmente curso el Nivel 4 en Desarrollo de Software, construyendo una base sólida en desarrollo frontend, programación, bases de datos, diseño de sistemas y resolución de problemas.',
+        'A través de mis estudios académicos y proyectos personales, he desarrollado habilidades prácticas en HTML, CSS, JavaScript, diseño web responsivo y diseño UI/UX. Disfruto combinar código limpio y bien estructurado con un diseño visual cuidado para crear sitios responsivos e intuitivos.',
+      ],
+      academicHeading: 'Base Académica',
+      schoolName: 'Intango Technical School',
+      tradeLabel: 'Especialidad: Software Development (SWD)',
+      levelLabel: 'Level 4 | S5',
+      locationLabel: 'Kigali, Rwanda',
+      academicPillars: [
+        'Desarrollo Frontend',
+        'Programación',
+        'Bases de Datos',
+        'Diseño de Sistemas',
+        'Resolución de Problemas',
+      ],
+      skillsHeading: 'Habilidades Frontend',
+      frontendSkills: [
+        { name: 'HTML5', description: 'Estructura web semántica y accesible' },
+        { name: 'CSS3', description: 'Diseños responsivos, Flexbox, Grid y animaciones' },
+        { name: 'JavaScript', description: 'Experiencias web interactivas y dinámicas' },
+        { name: 'Figma', description: 'Wireframing, prototipado y diseño de interfaces' },
+        { name: 'Responsive Web Design', description: 'Diseños para móvil, tableta y escritorio' },
+        { name: 'UI/UX Design', description: 'Diseño centrado en el usuario y usabilidad' },
+        { name: 'Wireframing', description: 'Planificación de interfaces y flujos de usuario' },
+        { name: 'Prototyping', description: 'Creación de conceptos de diseño interactivos' },
       ],
     },
     process: {
@@ -1485,30 +1501,33 @@ export const BUILTIN_TRANSLATIONS: Record<string, TranslationDictionary> = {
     },
     experience: {
       eyebrow: 'Erfahrung & Ausbildung',
-      heading: 'Werdegang & akademische Basis.',
-      helperPrefix: 'Bearbeitbare Zeitleisten-Einträge. Aktualisierbar in',
-      items: [
-        {
-          typeLabel: 'Erfahrung',
-          title: 'Frontend Developer',
-          organization: 'Unternehmen / Organisation (Bearbeitbar)',
-          period: 'Jahr – Jahr',
-          description: 'Ergänzen Sie hier Ihre Aufgaben und Erfolge – z. B. responsive Oberflächen und Komponenten.',
-        },
-        {
-          typeLabel: 'Erfahrung',
-          title: 'UI/UX Designer',
-          organization: 'Unternehmen / Organisation (Bearbeitbar)',
-          period: 'Jahr – Jahr',
-          description: 'Ergänzen Sie hier Ihre Designprojekte – z. B. User Research, Wireframes und Figma-Prototypen.',
-        },
-        {
-          typeLabel: 'Ausbildung',
-          title: 'Software Development',
-          organization: 'Bildungseinrichtung (Bearbeitbar)',
-          period: 'Jahr – Jahr',
-          description: 'Ergänzen Sie hier Ihr Studium oder Schwerpunkte in Softwareentwicklung und Design.',
-        },
+      heading: 'Hintergrund & Akademische Basis',
+      paragraphs: [
+        'Ich bin Student für Software Development an der Intango Technical School mit Sitz in Kigali, Ruanda. Derzeit absolviere ich Level 4 in Software Development und baue eine starke Grundlage in Frontend-Entwicklung, Programmierung, Datenbanken, Systemdesign und Problemlösung auf.',
+        'Durch mein Studium und persönliche Projekte habe ich praktische Fähigkeiten in HTML, CSS, JavaScript, Responsive Webdesign und UI/UX-Design entwickelt. Ich verbinde gerne sauberen, gut strukturierten Code mit durchdachtem visuellem Design für benutzerfreundliche Websites.',
+      ],
+      academicHeading: 'Akademische Basis',
+      schoolName: 'Intango Technical School',
+      tradeLabel: 'Fachrichtung: Software Development (SWD)',
+      levelLabel: 'Level 4 | S5',
+      locationLabel: 'Kigali, Rwanda',
+      academicPillars: [
+        'Frontend-Entwicklung',
+        'Programmierung',
+        'Datenbanken',
+        'Systemdesign',
+        'Problemlösung',
+      ],
+      skillsHeading: 'Frontend-Fähigkeiten',
+      frontendSkills: [
+        { name: 'HTML5', description: 'Semantische und barrierefreie Webstruktur' },
+        { name: 'CSS3', description: 'Responsive Layouts, Flexbox, Grid und Animationen' },
+        { name: 'JavaScript', description: 'Interaktive und dynamische Weberlebnisse' },
+        { name: 'Figma', description: 'Wireframing, Prototyping und Interface-Design' },
+        { name: 'Responsive Web Design', description: 'Layouts für Mobilgeräte, Tablets und Desktop' },
+        { name: 'UI/UX Design', description: 'Nutzerzentriertes Design und Benutzerfreundlichkeit' },
+        { name: 'Wireframing', description: 'Planung von Oberflächen und Nutzerflüssen' },
+        { name: 'Prototyping', description: 'Erstellung interaktiver Designkonzepte' },
       ],
     },
     process: {
@@ -1711,30 +1730,33 @@ export const BUILTIN_TRANSLATIONS: Record<string, TranslationDictionary> = {
     },
     experience: {
       eyebrow: 'Experiência & Educação',
-      heading: 'Histórico profissional e base acadêmica.',
-      helperPrefix: 'Itens editáveis da linha do tempo. Atualize em',
-      items: [
-        {
-          typeLabel: 'Experiência',
-          title: 'Frontend Developer',
-          organization: 'Empresa / Organização (Editável)',
-          period: 'Ano – Ano',
-          description: 'Adicione suas responsabilidades e conquistas aqui—como criar interfaces responsivas e melhorar a usabilidade.',
-        },
-        {
-          typeLabel: 'Experiência',
-          title: 'UI/UX Designer',
-          organization: 'Empresa / Organização (Editável)',
-          period: 'Ano – Ano',
-          description: 'Adicione seu trabalho de design aqui—como pesquisa, wireframes e protótipos no Figma.',
-        },
-        {
-          typeLabel: 'Educação',
-          title: 'Software Development',
-          organization: 'Instituição (Editável)',
-          period: 'Ano – Ano',
-          description: 'Adicione seu curso, foco de estudos ou marcos acadêmicos em desenvolvimento e design.',
-        },
+      heading: 'Histórico e Base Acadêmica',
+      paragraphs: [
+        'Sou estudante de Desenvolvimento de Software na Intango Technical School, baseado em Kigali, Ruanda. Atualmente estou cursando o Nível 4 em Desenvolvimento de Software, construindo uma base sólida em desenvolvimento frontend, programação, bancos de dados, design de sistemas e resolução de problemas.',
+        'Por meio dos meus estudos acadêmicos e projetos pessoais, desenvolvi habilidades práticas em HTML, CSS, JavaScript, web design responsivo e design UI/UX. Gosto de unir código limpo e bem estruturado a um design visual cuidadoso para criar sites intuitivos e fáceis de usar.',
+      ],
+      academicHeading: 'Base Acadêmica',
+      schoolName: 'Intango Technical School',
+      tradeLabel: 'Área: Software Development (SWD)',
+      levelLabel: 'Level 4 | S5',
+      locationLabel: 'Kigali, Rwanda',
+      academicPillars: [
+        'Desenvolvimento Frontend',
+        'Programação',
+        'Bancos de Dados',
+        'Design de Sistemas',
+        'Resolução de Problemas',
+      ],
+      skillsHeading: 'Habilidades Frontend',
+      frontendSkills: [
+        { name: 'HTML5', description: 'Estrutura web semântica e acessível' },
+        { name: 'CSS3', description: 'Layouts responsivos, Flexbox, Grid e animações' },
+        { name: 'JavaScript', description: 'Experiências web interativas e dinâmicas' },
+        { name: 'Figma', description: 'Wireframing, prototipagem e design de interface' },
+        { name: 'Responsive Web Design', description: 'Layouts para celular, tablet e desktop' },
+        { name: 'UI/UX Design', description: 'Design centrado no usuário e usabilidade' },
+        { name: 'Wireframing', description: 'Planejamento de interfaces e fluxos de usuário' },
+        { name: 'Prototyping', description: 'Criação de conceitos interativos de design' },
       ],
     },
     process: {
@@ -1937,30 +1959,33 @@ export const BUILTIN_TRANSLATIONS: Record<string, TranslationDictionary> = {
     },
     experience: {
       eyebrow: 'الخبرة والتعليم',
-      heading: 'الخلفية المهنية والأساس الأكاديمي.',
-      helperPrefix: 'عناصر قابلة للتعديل بسهولة في الملف',
-      items: [
-        {
-          typeLabel: 'خبرة',
-          title: 'Frontend Developer',
-          organization: 'شركة / مؤسسة (قابل للتعديل)',
-          period: 'سنة – سنة',
-          description: 'أضف مسؤولياتك وإنجازاتك هنا مثل بناء الواجهات المتجاوبة وتحسين تجربة الاستخدام.',
-        },
-        {
-          typeLabel: 'خبرة',
-          title: 'UI/UX Designer',
-          organization: 'شركة / مؤسسة (قابل للتعديل)',
-          period: 'سنة – سنة',
-          description: 'أضف أعمال التصميم هنا مثل أبحاث المستخدم والمخططات ونماذج Figma التفاعلية.',
-        },
-        {
-          typeLabel: 'تعليم',
-          title: 'Software Development',
-          organization: 'اسم المؤسسة التعليمية (قابل للتعديل)',
-          period: 'سنة – سنة',
-          description: 'أضف برنامجك الدراسي أو المحطات الرئيسية في تطوير البرمجيات وتصميم الواجهات.',
-        },
+      heading: 'الخلفية والأساس الأكاديمي',
+      paragraphs: [
+        'أنا طالب تطوير برمجيات في مدرسة Intango Technical School ومقري في كيغالي، رواندا. أدرس حالياً المستوى الرابع (Level 4) في تطوير البرمجيات، لبناء أساس قوي في تطوير الواجهات الأمامية والبرمجة وقواعد البيانات وتصميم الأنظمة وحل المشكلات.',
+        'من خلال دراستي الأكاديمية ومشاريعي الشخصية، طورت مهارات عملية في HTML وCSS وJavaScript وتصميم الويب المتجاوب وتصميم UI/UX. أستمتع بالجمع بين الكود النظيف المنظم والتصميم البصري المدروس لإنشاء مواقع متجاوبة وسهلة الاستخدام.',
+      ],
+      academicHeading: 'الأساس الأكاديمي',
+      schoolName: 'Intango Technical School',
+      tradeLabel: 'التخصص: Software Development (SWD)',
+      levelLabel: 'Level 4 | S5',
+      locationLabel: 'Kigali, Rwanda',
+      academicPillars: [
+        'تطوير الواجهات الأمامية',
+        'البرمجة',
+        'قواعد البيانات',
+        'تصميم الأنظمة',
+        'حل المشكلات',
+      ],
+      skillsHeading: 'مهارات الواجهة الأمامية',
+      frontendSkills: [
+        { name: 'HTML5', description: 'بنية ويب دلالية وسهلة الوصول' },
+        { name: 'CSS3', description: 'تخطيطات متجاوبة وFlexbox وGrid وحركات بصرية' },
+        { name: 'JavaScript', description: 'تجارب ويب تفاعلية وديناميكية' },
+        { name: 'Figma', description: 'المخططات الهيكلية والنماذج الأولية وتصميم الواجهات' },
+        { name: 'Responsive Web Design', description: 'تخطيطات للهواتف والأجهزة اللوحية وسطح المكتب' },
+        { name: 'UI/UX Design', description: 'تصميم يركز على المستخدم وسهولة الاستخدام' },
+        { name: 'Wireframing', description: 'تخطيط الواجهات ومسارات المستخدم' },
+        { name: 'Prototyping', description: 'إنشاء مفاهيم تصميم تفاعلية' },
       ],
     },
     process: {

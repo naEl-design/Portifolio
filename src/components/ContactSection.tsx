@@ -117,7 +117,7 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden py-20 md:py-28 border-t border-slate-200 dark:border-emerald-900/40 bg-[#F8FAF9] dark:bg-[#0C1D15]/55"
+      className="relative overflow-hidden py-20 md:py-28 border-t border-slate-200 dark:border-emerald-900/40 bg-[#F8FAF9]/80 dark:bg-[#0C1D15]/45"
     >
       {/* Subtle Ambient CTA Glow */}
       <div
