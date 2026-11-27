@@ -6,6 +6,7 @@ import {
   Instagram,
   Linkedin,
   Mail,
+  MessageCircle,
   Phone,
   Send,
 } from 'lucide-react';
@@ -25,7 +26,9 @@ export function ContactSection() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
-  const [validatedSuccess, setValidatedSuccess] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submittedSuccess, setSubmittedSuccess] = useState(false);
 
   const validate = (): FormErrors => {
     const nextErrors: FormErrors = {};
@@ -43,25 +46,60 @@ export function ContactSection() {
     return nextErrors;
   };
 
-  /**
-   * NOTE FOR BACKEND / EMAIL SERVICE INTEGRATION:
-   * Replace this handler with a fetch() request to your backend endpoint,
-   * Formspree, Web3Forms, or EmailJS when ready to send live emails.
-   */
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setSubmitError('');
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      setValidatedSuccess(false);
+      setSubmittedSuccess(false);
       return;
     }
 
     setErrors({});
-    setValidatedSuccess(true);
+    setSubmitting(true);
+
+    try {
+      const endpoint = CONTACT_INFO.formspreeEndpoint || '/api/contact';
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          message: message.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(data?.error || 'Could not send message right now.');
+      }
+
+      setSubmittedSuccess(true);
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : 'Network error. Try WhatsApp or Email below.';
+      setSubmitError(msg);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const contactMethods = [
+    {
+      id: 'whatsapp',
+      label: 'WhatsApp (Fast Reply)',
+      value: CONTACT_INFO.phoneDisplay,
+      href: CONTACT_INFO.whatsappHref,
+      icon: MessageCircle,
+      external: true,
+      accent: 'green' as const,
+      ltrValue: true,
+    },
     {
       id: 'phone',
       label: t.contact.phoneLabel,
@@ -69,7 +107,7 @@ export function ContactSection() {
       href: CONTACT_INFO.phoneHref,
       icon: Phone,
       external: false,
-      accent: 'green' as const,
+      accent: 'orange' as const,
       ltrValue: true,
     },
     {
@@ -79,7 +117,7 @@ export function ContactSection() {
       href: CONTACT_INFO.emailHref,
       icon: Mail,
       external: false,
-      accent: 'orange' as const,
+      accent: 'green' as const,
       ltrValue: true,
     },
     {
@@ -89,7 +127,7 @@ export function ContactSection() {
       href: CONTACT_INFO.linkedinUrl,
       icon: Linkedin,
       external: true,
-      accent: 'green' as const,
+      accent: 'orange' as const,
       ltrValue: false,
     },
     {
@@ -99,7 +137,7 @@ export function ContactSection() {
       href: CONTACT_INFO.githubUrl,
       icon: Github,
       external: true,
-      accent: 'orange' as const,
+      accent: 'green' as const,
       ltrValue: true,
     },
     {
@@ -109,15 +147,19 @@ export function ContactSection() {
       href: CONTACT_INFO.instagramUrl,
       icon: Instagram,
       external: true,
-      accent: 'green' as const,
+      accent: 'orange' as const,
       ltrValue: true,
     },
   ];
 
+  const whatsappMessageHref = `https://wa.me/250792831574?text=${encodeURIComponent(
+    `Hello Shingiro Nael, my name is ${name || 'Visitor'} (${email}).\n\n${message}`
+  )}`;
+
   return (
     <section
       id="contact"
-      className="relative overflow-hidden py-20 md:py-28 border-t border-slate-200 dark:border-emerald-900/40 bg-[#F8FAF9]/80 dark:bg-[#0C1D15]/45"
+      className="relative overflow-hidden py-20 md:py-28 border-t border-slate-200 dark:border-emerald-900/40 bg-white/80 dark:bg-[#06110C]/75"
     >
       {/* Subtle Ambient CTA Glow */}
       <div
@@ -132,8 +174,8 @@ export function ContactSection() {
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
         <Reveal>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            {/* Left Column: Headline & Direct Contact Details */}
-            <div className="lg:col-span-5 space-y-8">
+            {/* Left Column: Headline & Direct Contact Details (including WhatsApp & LinkedIn) */}
+            <div className="lg:col-span-5 space-y-6">
               <div>
                 <p className="text-sm font-semibold text-[#C2410C] dark:text-[#FB923C] mb-2">
                   {t.contact.eyebrow}
@@ -146,7 +188,7 @@ export function ContactSection() {
                 </p>
               </div>
 
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
                 {contactMethods.map((item, idx) => {
                   const Icon = item.icon;
                   const isOrange = item.accent === 'orange';
@@ -155,12 +197,12 @@ export function ContactSection() {
                       key={item.id}
                       href={item.href}
                       target={item.external ? '_blank' : undefined}
-                      rel={item.external ? 'noreferrer' : undefined}
+                      rel={item.external ? 'noopener noreferrer' : undefined}
                       style={{ transitionDelay: `${idx * 40}ms` }}
-                      className="group flex items-center gap-3.5 p-3.5 rounded-[12px] border border-slate-200 dark:border-emerald-900/50 bg-white dark:bg-[#06110C] hover:-translate-y-0.5 hover:border-[#EA580C] dark:hover:border-[#FB923C] hover:shadow-md transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
+                      className="group flex items-center gap-3.5 p-3 rounded-[12px] border border-slate-200 dark:border-emerald-900/50 bg-[#F8FAF9] dark:bg-[#0C1D15] hover:-translate-y-0.5 hover:border-[#EA580C] dark:hover:border-[#FB923C] hover:shadow-md transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
                     >
                       <div
-                        className={`w-10 h-10 rounded-[8px] flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-105 ${
+                        className={`w-9 h-9 rounded-[8px] flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-105 ${
                           isOrange
                             ? 'bg-orange-100 dark:bg-[#EA580C]/20 text-[#C2410C] dark:text-[#FB923C]'
                             : 'bg-emerald-100 dark:bg-[#16A34A]/20 text-[#15803D] dark:text-[#4ADE80]'
@@ -169,7 +211,7 @@ export function ContactSection() {
                         <Icon className="w-4 h-4" aria-hidden="true" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs font-medium text-slate-500 dark:text-emerald-200/60">
+                        <p className="text-[11px] font-medium text-slate-500 dark:text-emerald-200/65">
                           {item.label}
                         </p>
                         <p
@@ -185,28 +227,30 @@ export function ContactSection() {
               </div>
             </div>
 
-            {/* Right Column: Validated Contact Form */}
+            {/* Right Column: Working Validated Contact Form */}
             <div className="lg:col-span-7">
-              <div className="rounded-[20px] border border-slate-200 dark:border-emerald-900/50 bg-white dark:bg-[#06110C] p-6 sm:p-8 shadow-sm">
-                {validatedSuccess ? (
+              <div className="rounded-[20px] border border-slate-200 dark:border-emerald-900/50 bg-[#F8FAF9] dark:bg-[#0C1D15] p-6 sm:p-8 shadow-sm">
+                {submittedSuccess ? (
                   <div className="py-8 space-y-4">
                     <div className="w-12 h-12 rounded-[12px] bg-emerald-500/15 text-[#15803D] dark:text-[#4ADE80] flex items-center justify-center">
                       <CheckCircle2 className="w-6 h-6" aria-hidden="true" />
                     </div>
                     <h3 className="font-display text-2xl font-bold text-slate-900 dark:text-white">
-                      {t.contact.successTitlePrefix} {name}.
+                      Message received, {name}.
                     </h3>
                     <p className="text-sm text-slate-600 dark:text-emerald-100/75 leading-relaxed">
-                      {t.contact.successBody}{' '}
-                      <span
-                        dir="ltr"
-                        className="font-medium text-slate-900 dark:text-white"
-                      >
-                        {CONTACT_INFO.email}
-                      </span>
-                      .
+                      Your inquiry was validated and logged with the server. For immediate follow-up in Kigali or remotely, you can also open your message directly in WhatsApp or Email ({CONTACT_INFO.email}).
                     </p>
                     <div className="pt-2 flex flex-wrap items-center gap-3">
+                      <a
+                        href={whatsappMessageHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-[#15803D] hover:bg-[#166534] rounded-[12px] hover:-translate-y-0.5 transition-all duration-200"
+                      >
+                        <MessageCircle className="w-4 h-4" aria-hidden="true" />
+                        <span>Send via WhatsApp</span>
+                      </a>
                       <a
                         href={`${CONTACT_INFO.emailHref}?subject=${encodeURIComponent(
                           `Portfolio Inquiry from ${name}`
@@ -221,7 +265,7 @@ export function ContactSection() {
                       <button
                         type="button"
                         onClick={() => {
-                          setValidatedSuccess(false);
+                          setSubmittedSuccess(false);
                           setName('');
                           setEmail('');
                           setMessage('');
@@ -245,6 +289,7 @@ export function ContactSection() {
                         id="contact-name"
                         name="name"
                         type="text"
+                        maxLength={120}
                         value={name}
                         onChange={(e) => {
                           setName(e.target.value);
@@ -253,7 +298,7 @@ export function ContactSection() {
                         aria-invalid={Boolean(errors.name)}
                         aria-describedby={errors.name ? 'error-name' : undefined}
                         placeholder={t.contact.namePlaceholder}
-                        className="w-full px-4 py-2.5 text-sm rounded-[12px] border border-slate-300 dark:border-emerald-900/60 bg-[#F8FAF9] dark:bg-[#0C1D15] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-emerald-200/40 focus:outline-none focus:border-[#EA580C] dark:focus:border-[#FB923C] focus:ring-4 focus:ring-[#EA580C]/15 transition-all duration-200"
+                        className="w-full px-4 py-2.5 text-sm rounded-[12px] border border-slate-300 dark:border-emerald-900/60 bg-white dark:bg-[#06110C] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-emerald-200/40 focus:outline-none focus:border-[#EA580C] dark:focus:border-[#FB923C] focus:ring-4 focus:ring-[#EA580C]/15 transition-all duration-200"
                       />
                       {errors.name && (
                         <p
@@ -279,6 +324,7 @@ export function ContactSection() {
                         name="email"
                         type="email"
                         dir="ltr"
+                        maxLength={160}
                         value={email}
                         onChange={(e) => {
                           setEmail(e.target.value);
@@ -287,7 +333,7 @@ export function ContactSection() {
                         aria-invalid={Boolean(errors.email)}
                         aria-describedby={errors.email ? 'error-email' : undefined}
                         placeholder={t.contact.emailPlaceholder}
-                        className="w-full px-4 py-2.5 text-sm rounded-[12px] border border-slate-300 dark:border-emerald-900/60 bg-[#F8FAF9] dark:bg-[#0C1D15] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-emerald-200/40 focus:outline-none focus:border-[#EA580C] dark:focus:border-[#FB923C] focus:ring-4 focus:ring-[#EA580C]/15 transition-all duration-200"
+                        className="w-full px-4 py-2.5 text-sm rounded-[12px] border border-slate-300 dark:border-emerald-900/60 bg-white dark:bg-[#06110C] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-emerald-200/40 focus:outline-none focus:border-[#EA580C] dark:focus:border-[#FB923C] focus:ring-4 focus:ring-[#EA580C]/15 transition-all duration-200"
                       />
                       {errors.email && (
                         <p
@@ -312,6 +358,7 @@ export function ContactSection() {
                         id="contact-message"
                         name="message"
                         rows={5}
+                        maxLength={3000}
                         value={message}
                         onChange={(e) => {
                           setMessage(e.target.value);
@@ -320,7 +367,7 @@ export function ContactSection() {
                         aria-invalid={Boolean(errors.message)}
                         aria-describedby={errors.message ? 'error-message' : undefined}
                         placeholder={t.contact.messagePlaceholder}
-                        className="w-full px-4 py-3 text-sm rounded-[12px] border border-slate-300 dark:border-emerald-900/60 bg-[#F8FAF9] dark:bg-[#0C1D15] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-emerald-200/40 focus:outline-none focus:border-[#EA580C] dark:focus:border-[#FB923C] focus:ring-4 focus:ring-[#EA580C]/15 transition-all duration-200 resize-y"
+                        className="w-full px-4 py-3 text-sm rounded-[12px] border border-slate-300 dark:border-emerald-900/60 bg-white dark:bg-[#06110C] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-emerald-200/40 focus:outline-none focus:border-[#EA580C] dark:focus:border-[#FB923C] focus:ring-4 focus:ring-[#EA580C]/15 transition-all duration-200 resize-y"
                       />
                       {errors.message && (
                         <p
@@ -334,15 +381,26 @@ export function ContactSection() {
                       )}
                     </div>
 
+                    {submitError && (
+                      <p
+                        role="alert"
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-red-600 dark:text-red-400"
+                      >
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        <span>{submitError}</span>
+                      </p>
+                    )}
+
                     <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <p className="text-xs text-slate-500 dark:text-emerald-200/60">
-                        {t.contact.frontendNote}
+                      <p className="text-xs text-slate-500 dark:text-emerald-200/65">
+                        Direct submission enabled · Also reachable on WhatsApp.
                       </p>
                       <button
                         type="submit"
-                        className="group inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-[#C2410C] hover:bg-[#9A3412] dark:bg-[#EA580C] dark:hover:bg-[#C2410C] rounded-[12px] shadow-xs hover:shadow-[0_8px_20px_-6px_rgba(234,88,12,0.5)] hover:-translate-y-0.5 transition-all duration-200 whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
+                        disabled={submitting}
+                        className="group inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-[#C2410C] hover:bg-[#9A3412] dark:bg-[#EA580C] dark:hover:bg-[#C2410C] disabled:opacity-60 rounded-[12px] shadow-xs hover:shadow-[0_8px_20px_-6px_rgba(234,88,12,0.5)] hover:-translate-y-0.5 transition-all duration-200 whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
                       >
-                        <span>{t.contact.sendButton}</span>
+                        <span>{submitting ? 'Sending...' : t.contact.sendButton}</span>
                         <Send
                           className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                           aria-hidden="true"

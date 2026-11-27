@@ -1,6 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowUpRight, Code2, LayoutTemplate, Smartphone } from 'lucide-react';
+import {
+  ArrowUpRight,
+  BookOpen,
+  Code2,
+  ExternalLink,
+  Github,
+  LayoutTemplate,
+  Smartphone,
+  X,
+} from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import {
   PROJECTS,
@@ -10,10 +19,7 @@ import {
 import { Reveal, StaggerCard } from './Reveal';
 import { TiltCard } from './TiltCard';
 
-const AVAILABLE_CATEGORIES: Array<'All' | ProjectCategory> = [
-  'All',
-  ...Array.from(new Set(PROJECTS.map((project) => project.category))),
-];
+const FILTER_TABS: Array<'All' | ProjectCategory> = ['All', 'Web', 'UI/UX', 'Mobile'];
 
 const HIGHLIGHT_META = [
   { icon: Smartphone, accent: 'orange' as const },
@@ -123,38 +129,36 @@ function ProjectThumbnail({
 export function ProjectsSection() {
   const { t } = useLanguage();
   const [activeFilter, setActiveFilter] = useState<'All' | ProjectCategory>('All');
-  const [noticeProjectId, setNoticeProjectId] = useState<string | null>(null);
+  const [selectedCaseStudy, setSelectedCaseStudy] = useState<ProjectItem | null>(null);
 
   const filteredProjects =
     activeFilter === 'All'
       ? PROJECTS
-      : PROJECTS.filter((project) => project.category === activeFilter);
+      : PROJECTS.filter((project) => project.filterTags.includes(activeFilter));
+
+  useEffect(() => {
+    if (!selectedCaseStudy) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedCaseStudy(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedCaseStudy]);
 
   const getLocalizedProject = (project: ProjectItem) => {
     const match = t.projects.items.find((item) => item.id === project.id);
     return {
       name: match?.name ?? project.name,
       description: match?.description ?? project.description,
-      categoryLabel: match?.categoryLabel ?? project.category,
+      categoryLabel: project.filterTags.join(' · ') || match?.categoryLabel || project.category,
     };
   };
 
   const getCategoryLabel = (category: 'All' | ProjectCategory) => {
     if (category === 'All') return t.projects.allTab;
-    const projectInCat = PROJECTS.find((p) => p.category === category);
-    if (!projectInCat) return category;
-    return getLocalizedProject(projectInCat).categoryLabel;
-  };
-
-  const handleLinkClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    url: string,
-    projectId: string
-  ) => {
-    if (!url || url === '#') {
-      e.preventDefault();
-      setNoticeProjectId((prev) => (prev === projectId ? null : projectId));
-    }
+    return category;
   };
 
   return (
@@ -178,13 +182,13 @@ export function ProjectsSection() {
               </p>
             </div>
 
-            {/* Functional Project Filter */}
+            {/* Functional Project Filters: All, Web, UI/UX, Mobile */}
             <div
               role="tablist"
               aria-label={t.projects.eyebrow}
               className="inline-flex flex-wrap items-center gap-1 p-1 rounded-[12px] border border-slate-200 dark:border-emerald-900/60 bg-[#F8FAF9] dark:bg-[#0C1D15] self-start md:self-auto"
             >
-              {AVAILABLE_CATEGORIES.map((category) => {
+              {FILTER_TABS.map((category) => {
                 const isActive = activeFilter === category;
                 return (
                   <button
@@ -192,10 +196,7 @@ export function ProjectsSection() {
                     type="button"
                     role="tab"
                     aria-selected={isActive}
-                    onClick={() => {
-                      setActiveFilter(category);
-                      setNoticeProjectId(null);
-                    }}
+                    onClick={() => setActiveFilter(category)}
                     className={`relative px-3.5 py-2 text-xs font-medium rounded-[8px] transition-colors duration-150 whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C] ${
                       isActive
                         ? 'text-white'
@@ -216,7 +217,7 @@ export function ProjectsSection() {
             </div>
           </div>
 
-          {/* Animated Responsive Project Grid (2 Live Projects, Live Demo only) */}
+          {/* Animated Responsive Project Grid */}
           <motion.div
             layout
             className={`grid grid-cols-1 gap-6 ${
@@ -251,68 +252,93 @@ export function ProjectsSection() {
                         }}
                       />
 
-                    {/* Thumbnail */}
-                    <a
-                      href={project.liveUrl}
-                      target={project.liveUrl !== '#' ? '_blank' : undefined}
-                      rel={project.liveUrl !== '#' ? 'noreferrer' : undefined}
-                      onClick={(e) => handleLinkClick(e, project.liveUrl, project.id)}
-                      className="relative z-20 block w-full h-56 overflow-hidden border-b border-slate-200 dark:border-emerald-900/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
-                    >
-                      <ProjectThumbnail
-                        project={project}
-                        categoryLabel={localized.categoryLabel}
-                        displayName={localized.name}
-                        viewProjectLabel={t.projects.viewProject}
-                      />
-                    </a>
+                      {/* Thumbnail */}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedCaseStudy(project)}
+                        aria-label={`Open ${localized.name} case study`}
+                        className="relative z-20 block w-full h-56 overflow-hidden border-b border-slate-200 dark:border-emerald-900/50 text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
+                      >
+                        <ProjectThumbnail
+                          project={project}
+                          categoryLabel={localized.categoryLabel}
+                          displayName={localized.name}
+                          viewProjectLabel="Read Case Study"
+                        />
+                      </button>
 
-                    {/* Card Body */}
-                    <div className="relative z-20 p-6 flex flex-col flex-1 justify-between gap-5">
-                      <div>
-                        <p className="text-xs font-semibold text-[#15803D] dark:text-[#4ADE80] mb-1.5">
-                          {localized.categoryLabel}
-                        </p>
+                      {/* Card Body */}
+                      <div className="relative z-20 p-6 flex flex-col flex-1 justify-between gap-5">
+                        <div>
+                          <p className="text-xs font-semibold text-[#15803D] dark:text-[#4ADE80] mb-1.5">
+                            {localized.categoryLabel}
+                          </p>
 
-                        <h3 className="font-display text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#C2410C] dark:group-hover:text-[#FB923C] transition-colors">
-                          <a
-                            href={project.liveUrl}
-                            target={project.liveUrl !== '#' ? '_blank' : undefined}
-                            rel={project.liveUrl !== '#' ? 'noreferrer' : undefined}
-                            onClick={(e) => handleLinkClick(e, project.liveUrl, project.id)}
-                            className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C] rounded-xs"
-                          >
-                            {localized.name}
-                          </a>
-                        </h3>
-
-                        <p className="mt-2 text-sm text-slate-600 dark:text-emerald-100/75 leading-relaxed">
-                          {localized.description}
-                        </p>
-                      </div>
-
-                      <div className="space-y-4">
-                        {/* Technology Badges */}
-                        <div className="flex flex-wrap gap-1.5">
-                          {project.technologies.map((tech) => (
-                            <span
-                              key={tech}
-                              className="px-2.5 py-1 text-[11px] font-medium rounded-[8px] border border-slate-200 dark:border-emerald-900/60 bg-white dark:bg-[#06110C] text-slate-700 dark:text-emerald-100/85 whitespace-nowrap"
+                          <h3 className="font-display text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#C2410C] dark:group-hover:text-[#FB923C] transition-colors">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedCaseStudy(project)}
+                              className="text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C] rounded-xs"
                             >
-                              {tech}
-                            </span>
-                          ))}
+                              {localized.name}
+                            </button>
+                          </h3>
+
+                          <p className="mt-2 text-sm text-slate-600 dark:text-emerald-100/75 leading-relaxed">
+                            {localized.description}
+                          </p>
+
+                          <p className="mt-3 text-xs text-slate-500 dark:text-emerald-200/70 leading-relaxed border-s-2 border-[#EA580C]/60 ps-3">
+                            {project.caseStudy.role} · {project.caseStudy.result}
+                          </p>
                         </div>
 
-                        {noticeProjectId === project.id && (
-                          <p className="text-[11px] text-slate-600 dark:text-emerald-100/75 bg-white dark:bg-[#06110C] border border-slate-200 dark:border-emerald-900/60 rounded-[8px] px-3 py-2">
-                            Placeholder link (<code className="font-mono">#</code>). Replace{' '}
-                            <code className="font-mono">liveUrl</code> in{' '}
-                            <code className="font-mono">src/data/portfolioConfig.ts</code>.
-                          </p>
-                        )}
+                        <div className="space-y-4">
+                          {/* Technology Tags */}
+                          <div className="flex flex-wrap gap-1.5">
+                            {project.technologies.map((tech) => (
+                              <span
+                                key={tech}
+                                className="px-2.5 py-1 text-[11px] font-medium rounded-[8px] border border-slate-200 dark:border-emerald-900/60 bg-white dark:bg-[#06110C] text-slate-700 dark:text-emerald-100/85 whitespace-nowrap"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+
+                          {/* Card Actions: Case Study, Live Demo, Source Code */}
+                          <div className="pt-2 border-t border-slate-200/80 dark:border-emerald-900/50 flex flex-wrap items-center gap-2.5">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedCaseStudy(project)}
+                              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-[#C2410C] hover:bg-[#9A3412] dark:bg-[#EA580C] dark:hover:bg-[#C2410C] rounded-[10px] transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
+                            >
+                              <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
+                              <span>Case Study</span>
+                            </button>
+
+                            <a
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[#15803D] dark:text-[#4ADE80] border border-emerald-700/30 dark:border-emerald-800/70 bg-white dark:bg-[#06110C] hover:border-[#15803D] dark:hover:border-[#4ADE80] rounded-[10px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#15803D]"
+                            >
+                              <span>{t.projects.liveDemo}</span>
+                              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                            </a>
+
+                            <a
+                              href={project.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 dark:text-emerald-100 border border-slate-200 dark:border-emerald-900/60 bg-white dark:bg-[#06110C] hover:border-[#EA580C] dark:hover:border-[#FB923C] hover:text-[#C2410C] dark:hover:text-[#FB923C] rounded-[10px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
+                            >
+                              <Github className="w-3.5 h-3.5" aria-hidden="true" />
+                              <span>Source Code</span>
+                            </a>
+                          </div>
+                        </div>
                       </div>
-                    </div>
                     </motion.article>
                   </TiltCard>
                 );
@@ -360,6 +386,133 @@ export function ProjectsSection() {
           })}
         </div>
       </div>
+
+      {/* Interactive Case Study Modal Dialog */}
+      <AnimatePresence>
+        {selectedCaseStudy && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setSelectedCaseStudy(null)}
+            className="fixed inset-0 z-[70] bg-slate-950/65 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+          >
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="case-study-title"
+              initial={{ opacity: 0, y: 16, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.97 }}
+              transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[20px] border border-slate-200 dark:border-emerald-800/70 bg-white dark:bg-[#06110C] p-6 sm:p-8 shadow-2xl space-y-6 my-auto"
+            >
+              {/* Modal Header */}
+              <div className="flex items-start justify-between gap-4 border-b border-slate-200 dark:border-emerald-900/50 pb-4">
+                <div>
+                  <p className="text-xs font-semibold text-[#15803D] dark:text-[#4ADE80]">
+                    Case Study · {selectedCaseStudy.filterTags.join(' · ')}
+                  </p>
+                  <h3
+                    id="case-study-title"
+                    className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1"
+                  >
+                    {selectedCaseStudy.name}
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-emerald-200/70 mt-1">
+                    {selectedCaseStudy.caseStudy.role} · {selectedCaseStudy.caseStudy.timeline}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedCaseStudy(null)}
+                  aria-label="Close case study"
+                  className="w-9 h-9 rounded-[10px] border border-slate-200 dark:border-emerald-900/60 bg-[#F8FAF9] dark:bg-[#0C1D15] text-slate-600 dark:text-emerald-100 hover:text-[#C2410C] dark:hover:text-[#FB923C] flex items-center justify-center shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
+                >
+                  <X className="w-4 h-4" aria-hidden="true" />
+                </button>
+              </div>
+
+              {/* Problem */}
+              <div className="space-y-2">
+                <h4 className="font-display text-sm font-bold text-[#C2410C] dark:text-[#FB923C]">
+                  The Problem
+                </h4>
+                <p className="text-sm text-slate-600 dark:text-emerald-100/80 leading-relaxed">
+                  {selectedCaseStudy.caseStudy.problem}
+                </p>
+              </div>
+
+              {/* Process: Sketches -> Wireframes -> Final UI */}
+              <div className="space-y-3">
+                <h4 className="font-display text-sm font-bold text-slate-900 dark:text-white">
+                  Design &amp; Engineering Process
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {selectedCaseStudy.caseStudy.process.map((step, idx) => (
+                    <div
+                      key={step.stage}
+                      className="rounded-[12px] border border-slate-200 dark:border-emerald-900/50 bg-[#F8FAF9] dark:bg-[#0C1D15] p-4 space-y-1.5"
+                    >
+                      <p className="font-mono text-[11px] font-semibold text-[#15803D] dark:text-[#4ADE80] tabular-nums">
+                        0{idx + 1} · {step.stage}
+                      </p>
+                      <p className="text-xs text-slate-600 dark:text-emerald-100/75 leading-relaxed">
+                        {step.detail}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Result */}
+              <div className="rounded-[12px] border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50/70 dark:bg-[#16A34A]/10 p-4 space-y-1.5">
+                <h4 className="font-display text-sm font-bold text-[#15803D] dark:text-[#4ADE80]">
+                  Outcome &amp; Result
+                </h4>
+                <p className="text-sm text-slate-700 dark:text-emerald-100/85 leading-relaxed">
+                  {selectedCaseStudy.caseStudy.result}
+                </p>
+              </div>
+
+              {/* Footer Links */}
+              <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 dark:border-emerald-900/50">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <a
+                    href={selectedCaseStudy.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-[#C2410C] hover:bg-[#9A3412] dark:bg-[#EA580C] dark:hover:bg-[#C2410C] rounded-[10px] transition-colors"
+                  >
+                    <span>Visit Live Site</span>
+                    <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                  </a>
+                  <a
+                    href={selectedCaseStudy.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-slate-700 dark:text-emerald-100 border border-slate-200 dark:border-emerald-800/70 bg-[#F8FAF9] dark:bg-[#0C1D15] hover:border-[#EA580C] dark:hover:border-[#FB923C] rounded-[10px] transition-colors"
+                  >
+                    <Github className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>View GitHub</span>
+                  </a>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedCaseStudy(null)}
+                  className="px-4 py-2 text-xs font-medium text-slate-600 dark:text-emerald-200/75 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

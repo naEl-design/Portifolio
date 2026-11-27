@@ -2,35 +2,38 @@
  * ============================================================================
  * CENTRALIZED PORTFOLIO CONFIGURATION
  * ============================================================================
- * Edit this file to customize:
- *   1. Personal Info & Profile Photo (`PERSONAL_INFO`)
- *   2. Contact Details & Social Links (`CONTACT_INFO`)
- *   3. About Bio (`ABOUT_CONTENT`)
- *   4. Skills (`SKILL_GROUPS`)
- *   5. Services (`SERVICES`)
- *   6. Projects (`PROJECTS`)
- *   7. Experience & Education (`TIMELINE_ITEMS`)
- *   8. Design Process (`DESIGN_PROCESS_STEPS`)
- * ============================================================================
  */
 
-export type ProjectCategory = 'Frontend' | 'UI/UX' | 'Web Design';
+export type ProjectCategory = 'Web' | 'UI/UX' | 'Mobile';
+
+export interface CaseStudyProcessStage {
+  stage: 'Sketches' | 'Wireframes' | 'Final UI';
+  detail: string;
+}
+
+export interface ProjectCaseStudy {
+  role: string;
+  timeline: string;
+  problem: string;
+  process: CaseStudyProcessStage[];
+  result: string;
+}
 
 export interface ProjectItem {
   id: string;
   name: string;
   category: ProjectCategory;
+  filterTags: ProjectCategory[];
   description: string;
   technologies: string[];
-  /** Replace '#' with your real deployed project URL */
+  /** Live deployed URL */
   liveUrl: string;
-  /** Replace '#' with your real GitHub repository URL */
+  /** Source code / GitHub URL */
   githubUrl: string;
-  /** Optional: replace with a path to your real project screenshot (e.g., '/images/project-1.png') */
   thumbnailUrl?: string;
-  /** Visual variant for the built-in architectural wireframe thumbnail when thumbnailUrl is empty */
   thumbnailVariant: 'finance' | 'ecommerce' | 'portfolio' | 'student' | 'restaurant' | 'mobile';
   isPlaceholder: boolean;
+  caseStudy: ProjectCaseStudy;
 }
 
 export interface TimelineEntry {
@@ -43,6 +46,24 @@ export interface TimelineEntry {
   isPlaceholder: boolean;
 }
 
+export interface CertificateItem {
+  id: string;
+  title: string;
+  issuer: string;
+  status: string;
+  detail: string;
+}
+
+export interface LearningNoteItem {
+  id: string;
+  topic: string;
+  date: string;
+  readTime: string;
+  title: string;
+  summary: string;
+  takeaway: string;
+}
+
 /* -------------------------------------------------------------------------- */
 /* 1. PERSONAL INFORMATION & PROFILE PHOTO                                    */
 /* -------------------------------------------------------------------------- */
@@ -52,14 +73,14 @@ export const PERSONAL_INFO = {
   initials: 'SN',
   title: 'Frontend Developer & UI/UX Designer',
   location: 'Kigali, Rwanda',
+  availability: 'Currently learning Level 4 SWD · Open to Internships & Freelance',
   tagline: 'I design and build beautiful, user-focused web experiences.',
   supportingText:
     'Passionate about turning ideas into intuitive, responsive, and visually engaging digital experiences through thoughtful design and clean frontend development.',
   /**
-   * HOW TO ADD YOUR PROFILE PHOTO:
-   * Put your photo inside `public/images/profile.jpg` (or paste an image URL)
+   * Put your portrait photo inside `public/images/profile.jpg` (or WebP)
    * and set `profilePhotoUrl: '/images/profile.jpg'`.
-   * Leave empty ('') to display the elegant "SN" initials placeholder.
+   * Leave empty ('') to show the architectural studio workspace visual + SN monogram.
    */
   profilePhotoUrl: '',
 };
@@ -70,15 +91,21 @@ export const PERSONAL_INFO = {
 export const CONTACT_INFO = {
   phoneDisplay: '+250 792 831 574',
   phoneHref: 'tel:+250792831574',
+  whatsappHref:
+    'https://wa.me/250792831574?text=Hello%20Shingiro%20Nael%2C%20I%20viewed%20your%20portfolio%20and%20would%20like%20to%20connect.',
   email: 'naelshingiro@gmail.com',
   emailHref: 'mailto:naelshingiro@gmail.com',
   linkedinLabel: 'Shingiro Nael',
-  /** Replace with your exact LinkedIn profile URL when ready */
   linkedinUrl: 'https://www.linkedin.com/search/results/all/?keywords=Shingiro%20Nael',
   githubDisplay: 'https://github.com/naEl-design',
   githubUrl: 'https://github.com/naEl-design',
   instagramDisplay: 'https://www.instagram.com/_s.na3l_/',
   instagramUrl: 'https://www.instagram.com/_s.na3l_/',
+  /** Optional external design showcase URLs (leave '' until created) */
+  behanceUrl: '',
+  dribbbleUrl: '',
+  /** Optional Formspree endpoint (e.g. 'https://formspree.io/f/your-id'); defaults to built-in /api/contact */
+  formspreeEndpoint: '',
 };
 
 /* -------------------------------------------------------------------------- */
@@ -87,43 +114,41 @@ export const CONTACT_INFO = {
 export const ABOUT_CONTENT = {
   heading: 'Bridging thoughtful interface design with clean frontend code.',
   paragraphs: [
-    'I am Shingiro Nael, a Frontend Developer and UI/UX Designer based in Kigali, Rwanda, focused on building digital products that feel clear, fast, and intuitive.',
-    'My work sits where visual design meets implementation—translating user problems into structured wireframes, cohesive interfaces, and responsive code without losing craft along the way.',
-    'I enjoy solving practical problems through technology and care deeply about typography, layout clarity, accessibility, and the everyday details that make web experiences enjoyable to use.',
+    'I am Shingiro Nael, a Frontend Developer, UI/UX Designer, and Level 4 Software Development student at Intango Technical School in Kigali, Rwanda. I started designing because I noticed how often useful tools feel confusing to everyday users when visual hierarchy and structure are overlooked.',
+    'At Intango Technical School, I am building a strong foundation in programming, databases, system design, and frontend web engineering—while applying those lessons directly to real web interfaces.',
+    'My goal on every project is to pair clear Figma wireframes and user-centered thinking with semantic HTML5, modern CSS3, and responsive JavaScript so websites feel fast, intuitive, and accessible on every screen.',
   ],
 };
 
 /* -------------------------------------------------------------------------- */
-/* 4. SKILLS (No fabricated percentages)                                      */
+/* 4. SKILLS & TOOLS                                                          */
 /* -------------------------------------------------------------------------- */
-export interface SkillGroup {
-  id: string;
-  category: string;
-  subtitle: string;
-  items: { name: string; focus: string }[];
+export interface ToolItem {
+  name: string;
+  level: 'Core' | 'Proficient' | 'Learning';
+  detail: string;
 }
 
-export const SKILL_GROUPS: SkillGroup[] = [
+export const TOOLS_AND_LEARNING: ToolItem[] = [
   {
-    id: 'frontend',
-    category: 'Frontend Development',
-    subtitle: 'Building structured, accessible, and responsive websites in core web languages.',
-    items: [
-      { name: 'HTML', focus: 'Semantic markup, structure & accessibility' },
-      { name: 'CSS', focus: 'Responsive layouts, Flexbox, Grid & styling' },
-      { name: 'JavaScript', focus: 'Interactive DOM logic & modern ES6+ behavior' },
-    ],
+    name: 'Git & GitHub',
+    level: 'Proficient',
+    detail: 'Version control, branching, commits & public repositories',
   },
   {
-    id: 'uiux',
-    category: 'UI/UX Design',
-    subtitle: 'Designing intuitive flows from early exploration to interactive prototypes.',
-    items: [
-      { name: 'Figma', focus: 'Component libraries & interface systems' },
-      { name: 'Wireframing', focus: 'Information hierarchy & layout structure' },
-      { name: 'Prototyping', focus: 'Interactive flows & usability testing' },
-      { name: 'User Research', focus: 'Understanding needs & friction points' },
-    ],
+    name: 'VS Code',
+    level: 'Core',
+    detail: 'Daily editor workflow, extensions, formatting & debugging',
+  },
+  {
+    name: 'React',
+    level: 'Learning',
+    detail: 'Component architecture, props, hooks & interactive state',
+  },
+  {
+    name: 'Tailwind CSS',
+    level: 'Learning',
+    detail: 'Utility-first styling, design tokens & responsive layouts',
   },
 ];
 
@@ -144,61 +169,113 @@ export const SERVICES: ServiceItem[] = [
     number: '01',
     title: 'Frontend Development',
     description:
-      'Building responsive, interactive, and maintainable websites using HTML, CSS, and JavaScript.',
-    deliverables: ['HTML', 'CSS', 'JavaScript'],
+      'Building responsive, interactive, and maintainable websites using HTML5, CSS3, and JavaScript.',
+    deliverables: ['Semantic HTML5', 'Modern CSS3', 'Interactive JS', 'Clean structure'],
   },
   {
     id: 'ui-ux-design',
     number: '02',
     title: 'UI/UX Design',
     description:
-      'Designing intuitive digital experiences from early concepts and wireframes to polished prototypes.',
-    deliverables: ['Wireframes', 'User flows', 'Prototypes', 'UI design', 'User research'],
+      'Designing intuitive digital experiences from early concepts and wireframes to polished Figma prototypes.',
+    deliverables: ['Wireframes', 'User flows', 'Figma prototypes', 'Visual hierarchy'],
   },
   {
     id: 'responsive-web',
     number: '03',
-    title: 'Responsive Web Design',
+    title: 'Landing Pages & Responsive Sites',
     description:
-      'Creating websites that provide a smooth and consistent experience across mobile, tablet, and desktop devices.',
-    deliverables: ['Mobile-first layouts', 'Fluid typography', 'Cross-browser QA', 'Accessibility'],
+      'Creating fast landing pages and multi-device websites tailored for mobile, tablet, and desktop.',
+    deliverables: ['Mobile-first layout', 'Cross-browser QA', 'Accessibility', 'Fast loading'],
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/* 6. PROJECTS (Add more projects to this array anytime)                      */
+/* 6. PROJECTS & CASE STUDIES (SmartJob Website & Pocket)                     */
 /* -------------------------------------------------------------------------- */
 export const PROJECTS: ProjectItem[] = [
   {
     id: 'smartjob-website',
     name: 'SmartJob Website',
-    category: 'Web Design',
+    category: 'Web',
+    filterTags: ['Web', 'UI/UX', 'Mobile'],
     description:
-      'Live web project focused on structured job browsing, responsive layout hierarchy, and clear user navigation across devices.',
-    technologies: ['HTML', 'CSS', 'JavaScript'],
+      'Live job discovery web platform focused on structured listings, scannable hierarchy, and effortless mobile navigation.',
+    technologies: ['HTML5', 'CSS3', 'JavaScript', 'Figma'],
     liveUrl: 'https://smartjobwebsite.netlify.app/',
-    githubUrl: '#',
+    githubUrl: 'https://github.com/naEl-design',
     thumbnailUrl: '',
     thumbnailVariant: 'portfolio',
     isPlaceholder: false,
+    caseStudy: {
+      role: 'UI/UX Designer & Frontend Developer',
+      timeline: 'Concept, Design & Live Deployment',
+      problem:
+        'Job seekers browsing on phones often face cluttered job boards with dense text, unclear role details, and slow navigation between search and application steps.',
+      process: [
+        {
+          stage: 'Sketches',
+          detail:
+            'Mapped the core seeker journey on paper—focusing on how quickly a visitor can scan job title, location, and category above the fold.',
+        },
+        {
+          stage: 'Wireframes',
+          detail:
+            'Structured low-fidelity cards and filter groupings so listings collapse cleanly from desktop grids into thumb-friendly mobile stacks.',
+        },
+        {
+          stage: 'Final UI',
+          detail:
+            'Built the live interface with semantic HTML5, responsive CSS Flexbox/Grid, clear typography contrast, and interactive JavaScript navigation.',
+        },
+      ],
+      result:
+        'Deployed live on Netlify with a responsive multi-device layout, faster visual scanning across job cards, and clear navigation from discovery to details.',
+    },
   },
   {
     id: 'pocket-app',
     name: 'Pocket',
-    category: 'Frontend',
+    category: 'UI/UX',
+    filterTags: ['Web', 'UI/UX', 'Mobile'],
     description:
-      'Live web application crafted with clean interface structure, responsive styling, and interactive frontend behavior.',
-    technologies: ['HTML', 'CSS', 'JavaScript'],
+      'Live web application crafted with clean visual structure, responsive card layouts, and interactive JavaScript behavior.',
+    technologies: ['HTML5', 'CSS3', 'JavaScript', 'UI/UX'],
     liveUrl: 'https://pocket-9kgdhi4eb-nael-designs-projects.vercel.app/',
-    githubUrl: '#',
+    githubUrl: 'https://github.com/naEl-design',
     thumbnailUrl: '',
     thumbnailVariant: 'finance',
     isPlaceholder: false,
+    caseStudy: {
+      role: 'Product Designer & Frontend Developer',
+      timeline: 'Design System & Web Implementation',
+      problem:
+        'Everyday web utilities often overwhelm users with crowded panels and inconsistent spacing, making routine checks feel tedious on smaller screens.',
+      process: [
+        {
+          stage: 'Sketches',
+          detail:
+            'Explored compact card layouts and quick-glance summary blocks designed to surface key numbers and actions without clutter.',
+        },
+        {
+          stage: 'Wireframes',
+          detail:
+            'Defined spacing rules, interactive controls, and mobile breakpoints in Figma before writing code so visual hierarchy stayed consistent.',
+        },
+        {
+          stage: 'Final UI',
+          detail:
+            'Implemented interactive DOM behavior in JavaScript alongside responsive CSS styling and balanced card contrast, then shipped on Vercel.',
+        },
+      ],
+      result:
+        'Shipped live on Vercel as a focused, lightweight interface that stays readable and responsive across mobile phones, tablets, and desktop monitors.',
+    },
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/* 7. EXPERIENCE & EDUCATION                                                  */
+/* 7. EXPERIENCE, EDUCATION & CERTIFICATES                                    */
 /* -------------------------------------------------------------------------- */
 export const TIMELINE_ITEMS: TimelineEntry[] = [
   {
@@ -223,8 +300,74 @@ export const TIMELINE_ITEMS: TimelineEntry[] = [
   },
 ];
 
+export const CERTIFICATES: CertificateItem[] = [
+  {
+    id: 'cert-swd-l4',
+    title: 'TVET Level 4 — Software Development (SWD)',
+    issuer: 'Intango Technical School · Kigali, Rwanda',
+    status: 'In Progress (S5)',
+    detail:
+      'Core curriculum covering web development, programming fundamentals, databases, system design, and practical software problem-solving.',
+  },
+  {
+    id: 'cert-web-foundations',
+    title: 'Frontend Web Foundations (HTML5, CSS3 & JS)',
+    issuer: 'Academic & Project Portfolio Practice',
+    status: 'Applied in Live Builds',
+    detail:
+      'Demonstrated semantic structure, Flexbox/Grid responsiveness, and interactive DOM behavior across deployed web projects.',
+  },
+  {
+    id: 'cert-uiux-figma',
+    title: 'UI/UX Wireframing & Interactive Prototyping',
+    issuer: 'Self-Directed & Studio Practice (Figma)',
+    status: 'Portfolio Track',
+    detail:
+      'User-centered layout planning, component organization, mobile-first breakpoints, and usability-focused interface flows.',
+  },
+];
+
 /* -------------------------------------------------------------------------- */
-/* 8. DESIGN PROCESS                                                          */
+/* 8. LEARNING NOTES                                                          */
+/* -------------------------------------------------------------------------- */
+export const LEARNING_NOTES: LearningNoteItem[] = [
+  {
+    id: 'note-semantic-html',
+    topic: 'HTML5 & Accessibility',
+    date: 'Level 4 Study Note',
+    readTime: '2 min read',
+    title: 'Why semantic HTML comes before styling',
+    summary:
+      'Using landmarks like <header>, <main>, <section>, and proper heading levels makes pages immediately easier for keyboards, screen readers, and search engines to understand.',
+    takeaway:
+      'At Intango Technical School, building clean document structure first also makes CSS layout rules simpler and easier to maintain.',
+  },
+  {
+    id: 'note-figma-to-css',
+    topic: 'UI/UX to Code',
+    date: 'Workflow Note',
+    readTime: '3 min read',
+    title: 'Translating Figma spacing into CSS Grid & Flexbox',
+    summary:
+      'Consistent spacing scales in Figma (8px, 16px, 24px) translate directly into predictable CSS Grid gaps and Flexbox padding without guesswork.',
+    takeaway:
+      'Sketching mobile stacks before desktop grids prevents cramped cards and horizontal scrolling on small phones.',
+  },
+  {
+    id: 'note-learning-react',
+    topic: 'Currently Learning',
+    date: 'Next Step',
+    readTime: '2 min read',
+    title: 'Moving from vanilla JavaScript to React & Tailwind',
+    summary:
+      'Understanding DOM manipulation and state in plain JavaScript makes React components and Tailwind utility classes click much faster.',
+    takeaway:
+      'Strong HTML, CSS, and JavaScript fundamentals remain the backbone of every modern framework.',
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/* 9. DESIGN PROCESS                                                          */
 /* -------------------------------------------------------------------------- */
 export interface ProcessStep {
   step: string;

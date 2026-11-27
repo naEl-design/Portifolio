@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import {
   ArrowDownRight,
   Code2,
+  FileDown,
   Layers,
   MapPin,
   PenTool,
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioConfig';
 import { useLanguage } from '../context/LanguageContext';
+import { downloadResumePdf } from '../utils/generateResumePdf';
 import { MagneticLink } from './MagneticLink';
 
 const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -73,7 +75,7 @@ export function Hero() {
         <div className="w-full h-full rounded-full bg-[#16A34A]/12 dark:bg-[#16A34A]/16 blur-3xl animate-ambient-pulse" />
       </motion.div>
 
-      {/* Subtle Floating Ambient Motes */}
+      {/* Subtle Floating Ambient Motes (hidden on low-end mobile) */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <span className="hidden md:block absolute top-24 left-[12%] w-1.5 h-1.5 rounded-full bg-[#EA580C]/45 animate-float-slow" />
         <span className="hidden md:block absolute top-40 right-[42%] w-1.5 h-1.5 rounded-full bg-[#16A34A]/45 animate-float-slow-reverse" />
@@ -87,12 +89,12 @@ export function Hero() {
           {/* Left Column: Staggered Typography & Magnetic CTAs */}
           <div className="lg:col-span-7 space-y-6">
             <div className="space-y-2.5">
-              {/* Step 2: Location & Name Badge (0.18s) */}
+              {/* Location, Name & Clean Unboxed Availability Status */}
               <motion.p
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.18, ease: EASE_OUT }}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#15803D] dark:text-[#4ADE80]"
+                className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm font-semibold text-[#15803D] dark:text-[#4ADE80]"
               >
                 <span>{PERSONAL_INFO.name}</span>
                 <span aria-hidden="true" className="text-slate-400 dark:text-emerald-700">
@@ -101,6 +103,12 @@ export function Hero() {
                 <span className="inline-flex items-center gap-1 text-slate-600 dark:text-emerald-100/75 font-medium">
                   <MapPin className="w-3.5 h-3.5 text-[#C2410C] dark:text-[#FB923C]" aria-hidden="true" />
                   {PERSONAL_INFO.location}
+                </span>
+                <span aria-hidden="true" className="text-slate-400 dark:text-emerald-700">
+                  ·
+                </span>
+                <span className="text-xs font-medium text-[#C2410C] dark:text-[#FB923C]">
+                  {PERSONAL_INFO.availability}
                 </span>
               </motion.p>
 
@@ -136,12 +144,12 @@ export function Hero() {
               {t.hero.supportingText}
             </motion.p>
 
-            {/* Step 6: Magnetic CTA Buttons (0.62s) */}
+            {/* Step 6: Magnetic CTA Buttons + Downloadable One-Page PDF CV */}
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.62, ease: EASE_OUT }}
-              className="pt-2 flex flex-wrap items-center gap-4"
+              className="pt-2 flex flex-wrap items-center gap-3.5"
             >
               <MagneticLink
                 href="#projects"
@@ -164,6 +172,15 @@ export function Hero() {
               >
                 {t.hero.contactMe}
               </MagneticLink>
+
+              <button
+                type="button"
+                onClick={downloadResumePdf}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-slate-700 dark:text-emerald-100 bg-transparent border border-slate-300 dark:border-emerald-800/70 hover:border-[#EA580C] dark:hover:border-[#FB923C] hover:text-[#C2410C] dark:hover:text-[#FB923C] hover:-translate-y-0.5 rounded-[12px] transition-all duration-200 whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]"
+              >
+                <FileDown className="w-4 h-4" aria-hidden="true" />
+                <span>Download CV (PDF)</span>
+              </button>
             </motion.div>
           </div>
 
@@ -189,6 +206,7 @@ export function Hero() {
                     <img
                       src={PERSONAL_INFO.profilePhotoUrl}
                       alt={`Portrait of ${PERSONAL_INFO.name}`}
+                      loading="lazy"
                       onError={() => setImageFailed(true)}
                       className="w-full h-full object-cover rounded-[12px]"
                     />
@@ -225,7 +243,7 @@ export function Hero() {
                     </div>
                   )}
 
-                  {/* Floating UI Card: UI/UX Design (continuous GPU float + micro tilt) */}
+                  {/* Floating UI Card: UI/UX Design */}
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -247,7 +265,7 @@ export function Hero() {
                     </div>
                   </motion.div>
 
-                  {/* Floating UI Card: Frontend Code (continuous reverse GPU float + micro tilt) */}
+                  {/* Floating UI Card: Frontend Code */}
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}

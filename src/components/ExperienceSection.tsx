@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import {
+  Award,
   Braces,
   Code2,
   Eye,
@@ -14,6 +15,7 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { CERTIFICATES } from '../data/portfolioConfig';
 import { Reveal, StaggerCard } from './Reveal';
 import { TiltCard } from './TiltCard';
 
@@ -231,6 +233,70 @@ export function ExperienceSection() {
             </div>
           </div>
         </Reveal>
+
+        {/* Certificates & Academic Milestones */}
+        <div className="pt-8 border-t border-slate-200 dark:border-emerald-900/50 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+            <div>
+              <p className="text-xs font-semibold text-[#15803D] dark:text-[#4ADE80]">
+                Education &amp; Credentials
+              </p>
+              <h3 className="font-display text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                Certificates &amp; Academic Milestones
+              </h3>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-emerald-200/70">
+              Intango Technical School · Level 4 SWD | S5
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {CERTIFICATES.map((cert, idx) => {
+              const isOrange = idx % 2 === 1;
+              return (
+                <StaggerCard
+                  key={cert.id}
+                  index={idx}
+                  className="rounded-[20px] border border-slate-200 dark:border-emerald-900/50 bg-white/95 dark:bg-[#06110C]/95 p-6 flex flex-col justify-between gap-4 transition-colors hover:border-[#EA580C]/60 dark:hover:border-[#FB923C]/60"
+                >
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <div
+                        className={`w-9 h-9 rounded-[10px] flex items-center justify-center ${
+                          isOrange
+                            ? 'bg-orange-100 dark:bg-[#EA580C]/20 text-[#C2410C] dark:text-[#FB923C]'
+                            : 'bg-emerald-100 dark:bg-[#16A34A]/20 text-[#15803D] dark:text-[#4ADE80]'
+                        }`}
+                      >
+                        <Award className="w-4 h-4" aria-hidden="true" />
+                      </div>
+                      <span
+                        className={`text-xs font-semibold ${
+                          isOrange
+                            ? 'text-[#C2410C] dark:text-[#FB923C]'
+                            : 'text-[#15803D] dark:text-[#4ADE80]'
+                        }`}
+                      >
+                        {cert.status}
+                      </span>
+                    </div>
+
+                    <h4 className="font-display text-base font-bold text-slate-900 dark:text-white">
+                      {cert.title}
+                    </h4>
+                    <p className="text-xs font-medium text-slate-500 dark:text-emerald-200/70">
+                      {cert.issuer}
+                    </p>
+                  </div>
+
+                  <p className="text-xs text-slate-600 dark:text-emerald-100/75 leading-relaxed pt-3 border-t border-slate-200 dark:border-emerald-900/50">
+                    {cert.detail}
+                  </p>
+                </StaggerCard>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );

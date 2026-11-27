@@ -3,24 +3,68 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shingiro Nael | Frontend Developer &amp; UI/UX Designer</title>
+    <title>Shingiro Nael – Frontend Developer &amp; UI/UX Designer</title>
     <meta
       name="description"
-      content="Portfolio of Shingiro Nael, a Frontend Developer and UI/UX Designer based in Kigali, Rwanda, specializing in responsive web development and intuitive digital experiences."
-    />
-    <meta property="og:title" content="Shingiro Nael | Frontend Developer & UI/UX Designer" />
-    <meta
-      property="og:description"
-      content="Portfolio of Shingiro Nael, a Frontend Developer and UI/UX Designer based in Kigali, Rwanda, specializing in responsive web development and intuitive digital experiences."
+      content="Portfolio of Shingiro Nael, Frontend Developer & UI/UX Designer in Kigali, Rwanda. Explore SmartJob & Pocket case studies, skills, and services."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NAEL.dev" />
+    <meta
+      property="og:title"
+      content="Shingiro Nael – Frontend Developer & UI/UX Designer"
+    />
+    <meta
+      property="og:description"
+      content="Portfolio of Shingiro Nael, Frontend Developer & UI/UX Designer in Kigali, Rwanda. Explore SmartJob & Pocket case studies, skills, and services."
+    />
+    <meta property="og:image" content="/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Shingiro Nael – Frontend Developer & UI/UX Designer"
+    />
+    <meta
+      name="twitter:description"
+      content="Portfolio of Shingiro Nael, Frontend Developer & UI/UX Designer in Kigali, Rwanda. Explore SmartJob & Pocket case studies, skills, and services."
+    />
+    <meta name="twitter:image" content="/og-image.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Shingiro Nael",
+        "jobTitle": "Frontend Developer & UI/UX Designer",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Kigali",
+          "addressCountry": "RW"
+        },
+        "alumniOf": {
+          "@type": "EducationalOrganization",
+          "name": "Intango Technical School"
+        },
+        "email": "mailto:naelshingiro@gmail.com",
+        "sameAs": [
+          "https://github.com/naEl-design",
+          "https://www.instagram.com/_s.na3l_/"
+        ],
+        "knowsAbout": [
+          "HTML5",
+          "CSS3",
+          "JavaScript",
+          "UI/UX Design",
+          "Figma",
+          "Responsive Web Design"
+        ]
+      }
+    </script>
     <script>
       (function () {
         try {
@@ -35,6 +79,9 @@
           } else {
             root.classList.add('dark');
           }
+          if (localStorage.getItem('nael_reduce_motion') === 'true') {
+            root.setAttribute('data-reduce-motion', 'true');
+          }
         } catch (e) {}
       })();
     </script>
@@ -44,4 +91,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

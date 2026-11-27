@@ -119,6 +119,36 @@ async function startServer(): Promise<void> {
     }
   });
 
+  app.post('/api/contact', (req: Request, res: Response) => {
+    const body = req.body as {
+      name?: unknown;
+      email?: unknown;
+      message?: unknown;
+    };
+
+    const name = typeof body?.name === 'string' ? body.name.trim() : '';
+    const email = typeof body?.email === 'string' ? body.email.trim() : '';
+    const message = typeof body?.message === 'string' ? body.message.trim() : '';
+
+    if (!name || name.length > 120) {
+      res.status(400).json({ error: 'Please provide a valid name.' });
+      return;
+    }
+    if (!email || email.length > 160 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      res.status(400).json({ error: 'Please provide a valid email address.' });
+      return;
+    }
+    if (!message || message.length > 3000) {
+      res.status(400).json({ error: 'Please enter a message under 3000 characters.' });
+      return;
+    }
+
+    res.json({
+      ok: true,
+      receivedAt: new Date().toISOString(),
+    });
+  });
+
   const isProd = process.env.NODE_ENV === 'production';
 
   if (!isProd) {

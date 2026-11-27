@@ -10,20 +10,35 @@ interface Particle {
   alpha: number;
 }
 
+interface AnimatedBackgroundProps {
+  reduceMotion?: boolean;
+}
+
 /**
  * Full-viewport subtle animated background combining drifting radial color orbs
  * and a lightweight geometric particle constellation on <canvas>.
- * Automatically pauses when tab is hidden or prefers-reduced-motion is enabled.
+ * Disabled automatically on mobile/coarse pointers (for low-end phone performance),
+ * when the tab is hidden, or when reduced motion is enabled.
  */
-export function AnimatedBackground() {
+export function AnimatedBackground({ reduceMotion = false }: AnimatedBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    if (reduceMotion) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (reducedMotionQuery.matches) return;
+    const coarsePointerQuery = window.matchMedia('(pointer: coarse)');
+
+    if (
+      reducedMotionQuery.matches ||
+      coarsePointerQuery.matches ||
+      window.innerWidth < 768
+    ) {
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -46,21 +61,25 @@ export function AnimatedBackground() {
 
     resize();
 
-    const particleCount = width < 768 ? 16 : 30;
-    const particles: Particle[] = Array.from({ length: particleCount }, (_, i) => ({
+    const particles: Particle[] = Array.from({ length: 26 }, (_, i) => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.38,
-      vy: (Math.random() - 0.5) * 0.34,
-      radius: 1.4 + Math.random() * 1.8,
+      vx: (Math.random() - 0.5) * 0.36,
+      vy: (Math.random() - 0.5) * 0.32,
+      radius: 1.4 + Math.random() * 1.6,
       isOrange: i % 2 === 0,
-      alpha: 0.28 + Math.random() * 0.35,
+      alpha: 0.28 + Math.random() * 0.32,
     }));
 
-    const maxDist = width < 768 ? 110 : 145;
+    const maxDist = 140;
 
     const render = () => {
-      if (document.hidden || reducedMotionQuery.matches) {
+      if (
+        document.hidden ||
+        reducedMotionQuery.matches ||
+        window.innerWidth < 768
+      ) {
+        ctx.clearRect(0, 0, width, height);
         rafId = window.requestAnimationFrame(render);
         return;
       }
@@ -78,7 +97,6 @@ export function AnimatedBackground() {
         if (p.y < -10) p.y = height + 10;
         else if (p.y > height + 10) p.y = -10;
 
-        // Draw subtle connecting lines between nearby particles
         for (let j = i + 1; j < particles.length; j++) {
           const q = particles[j];
           const dx = p.x - q.x;
@@ -97,7 +115,6 @@ export function AnimatedBackground() {
           }
         }
 
-        // Draw floating particle dot
         const dotAlpha = isDark ? p.alpha : p.alpha * 0.72;
         ctx.fillStyle = p.isOrange
           ? `rgba(251, 146, 60, ${dotAlpha})`
@@ -117,7 +134,19 @@ export function AnimatedBackground() {
       window.cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
     };
-  }, []);
+  }, [reduceMotion]);
+
+  if (reduceMotion) {
+    return (
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      >
+        <div className="absolute -top-32 -start-24 w-[420px] h-[420px] rounded-full bg-[#EA580C]/8 dark:bg-[#EA580C]/10 blur-3xl" />
+        <div className="absolute top-[42%] -end-24 w-[380px] h-[380px] rounded-full bg-[#16A34A]/8 dark:bg-[#16A34A]/10 blur-3xl" />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -125,12 +154,12 @@ export function AnimatedBackground() {
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
     >
       {/* Drifting ambient orange & green gradient spheres */}
-      <div className="absolute -top-32 -start-24 w-[480px] h-[480px] rounded-full bg-[#EA580C]/10 dark:bg-[#EA580C]/14 blur-3xl animate-orbit-drift" />
-      <div className="absolute top-[38%] -end-28 w-[440px] h-[440px] rounded-full bg-[#16A34A]/10 dark:bg-[#16A34A]/14 blur-3xl animate-orbit-drift-reverse" />
+      <div className="hidden sm:block absolute -top-32 -start-24 w-[480px] h-[480px] rounded-full bg-[#EA580C]/10 dark:bg-[#EA580C]/14 blur-3xl animate-orbit-drift" />
+      <div className="hidden sm:block absolute top-[38%] -end-28 w-[440px] h-[440px] rounded-full bg-[#16A34A]/10 dark:bg-[#16A34A]/14 blur-3xl animate-orbit-drift-reverse" />
       <div className="absolute -bottom-32 start-[25%] w-[420px] h-[420px] rounded-full bg-[#EA580C]/8 dark:bg-[#16A34A]/12 blur-3xl animate-ambient-pulse" />
 
-      {/* Subtle moving geometric particle network */}
-      <canvas ref={canvasRef} className="block w-full h-full opacity-90" />
+      {/* Desktop-only subtle moving geometric particle network */}
+      <canvas ref={canvasRef} className="hidden md:block w-full h-full opacity-90" />
     </div>
   );
 }

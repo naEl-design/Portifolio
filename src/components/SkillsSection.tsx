@@ -2,8 +2,11 @@ import {
   Braces,
   CheckCircle2,
   Code2,
+  ExternalLink,
   Figma,
   FileCode2,
+  GitBranch,
+  Github,
   Grid,
   Layers,
   Layout,
@@ -12,18 +15,22 @@ import {
   Search,
   Sliders,
   Smartphone,
+  Terminal,
+  Wind,
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { CONTACT_INFO, TOOLS_AND_LEARNING } from '../data/portfolioConfig';
 import { Reveal, StaggerCard } from './Reveal';
 import { TiltCard } from './TiltCard';
 
 const FRONTEND_SKILLS = [
-  { name: 'HTML', icon: FileCode2 },
-  { name: 'CSS', icon: Palette },
-  { name: 'JavaScript', icon: Braces },
+  { name: 'HTML5', level: 'Core', icon: FileCode2 },
+  { name: 'CSS3', level: 'Core', icon: Palette },
+  { name: 'JavaScript', level: 'Core', icon: Braces },
 ];
 
 const UIUX_ICONS = [Figma, Layout, Layers, Search];
+const TOOL_ICONS = [GitBranch, Terminal, Code2, Wind];
 const WORKFLOW_ICONS = [Smartphone, Grid, Sliders, CheckCircle2];
 
 export function SkillsSection() {
@@ -72,13 +79,51 @@ export function SkillsSection() {
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-8 space-y-10">
         <Reveal>
-          <div className="max-w-2xl mb-10">
-            <p className="text-sm font-semibold text-[#15803D] dark:text-[#4ADE80] mb-2">
-              {t.skills.eyebrow}
-            </p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white text-balance">
-              {t.skills.heading}
-            </h2>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+            <div className="max-w-2xl">
+              <p className="text-sm font-semibold text-[#15803D] dark:text-[#4ADE80] mb-2">
+                {t.skills.eyebrow}
+              </p>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white text-balance">
+                {t.skills.heading}
+              </h2>
+            </div>
+
+            {/* Code & Design Proof Links */}
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href={CONTACT_INFO.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-[12px] border border-slate-200 dark:border-emerald-900/60 bg-[#F8FAF9] dark:bg-[#0C1D15] text-slate-800 dark:text-emerald-100 hover:border-[#EA580C] dark:hover:border-[#FB923C] hover:text-[#C2410C] dark:hover:text-[#FB923C] transition-colors whitespace-nowrap"
+              >
+                <Github className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>GitHub Code</span>
+                <ExternalLink className="w-3 h-3" aria-hidden="true" />
+              </a>
+              {CONTACT_INFO.behanceUrl && (
+                <a
+                  href={CONTACT_INFO.behanceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-[12px] border border-slate-200 dark:border-emerald-900/60 bg-[#F8FAF9] dark:bg-[#0C1D15] text-slate-800 dark:text-emerald-100 hover:border-[#15803D] dark:hover:border-[#4ADE80] transition-colors whitespace-nowrap"
+                >
+                  <span>Behance Designs</span>
+                  <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                </a>
+              )}
+              {CONTACT_INFO.dribbbleUrl && (
+                <a
+                  href={CONTACT_INFO.dribbbleUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-[12px] border border-slate-200 dark:border-emerald-900/60 bg-[#F8FAF9] dark:bg-[#0C1D15] text-slate-800 dark:text-emerald-100 hover:border-[#EA580C] dark:hover:border-[#FB923C] transition-colors whitespace-nowrap"
+                >
+                  <span>Dribbble Shots</span>
+                  <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                </a>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -108,14 +153,19 @@ export function SkillsSection() {
                             key={skill.name}
                             className="group rounded-[12px] border border-slate-200 dark:border-emerald-900/50 bg-white dark:bg-[#06110C] px-4 py-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#15803D] dark:hover:border-[#4ADE80]/70 hover:shadow-sm"
                           >
-                            <div className="flex items-center gap-2.5">
-                              <SkillIcon
-                                className="w-4 h-4 text-[#15803D] dark:text-[#4ADE80] transition-transform duration-200 group-hover:scale-110 shrink-0"
-                                aria-hidden="true"
-                              />
-                              <p className="font-display text-sm font-semibold text-slate-900 dark:text-white group-hover:text-[#15803D] dark:group-hover:text-[#4ADE80] transition-colors">
-                                {skill.name}
-                              </p>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2.5">
+                                <SkillIcon
+                                  className="w-4 h-4 text-[#15803D] dark:text-[#4ADE80] transition-transform duration-200 group-hover:scale-110 shrink-0"
+                                  aria-hidden="true"
+                                />
+                                <p className="font-display text-sm font-semibold text-slate-900 dark:text-white group-hover:text-[#15803D] dark:group-hover:text-[#4ADE80] transition-colors">
+                                  {skill.name}
+                                </p>
+                              </div>
+                              <span className="text-[11px] font-medium text-[#15803D] dark:text-[#4ADE80]">
+                                {skill.level}
+                              </span>
                             </div>
                             <p className="text-xs text-slate-500 dark:text-emerald-100/70 mt-1.5 leading-relaxed">
                               {t.skills.frontendFocuses[idx] ?? ''}
@@ -155,14 +205,19 @@ export function SkillsSection() {
                             key={idx}
                             className="group rounded-[12px] border border-slate-200 dark:border-emerald-900/50 bg-white dark:bg-[#06110C] px-4 py-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#EA580C] dark:hover:border-[#FB923C]/70 hover:shadow-sm"
                           >
-                            <div className="flex items-center gap-2.5">
-                              <SkillIcon
-                                className="w-4 h-4 text-[#C2410C] dark:text-[#FB923C] transition-transform duration-200 group-hover:scale-110 shrink-0"
-                                aria-hidden="true"
-                              />
-                              <p className="font-display text-sm font-semibold text-slate-900 dark:text-white group-hover:text-[#C2410C] dark:group-hover:text-[#FB923C] transition-colors">
-                                {skill.name}
-                              </p>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2.5">
+                                <SkillIcon
+                                  className="w-4 h-4 text-[#C2410C] dark:text-[#FB923C] transition-transform duration-200 group-hover:scale-110 shrink-0"
+                                  aria-hidden="true"
+                                />
+                                <p className="font-display text-sm font-semibold text-slate-900 dark:text-white group-hover:text-[#C2410C] dark:group-hover:text-[#FB923C] transition-colors">
+                                  {skill.name}
+                                </p>
+                              </div>
+                              <span className="text-[11px] font-medium text-[#C2410C] dark:text-[#FB923C]">
+                                Core
+                              </span>
                             </div>
                             <p className="text-xs text-slate-500 dark:text-emerald-100/70 mt-1.5 leading-relaxed">
                               {skill.focus}
@@ -177,6 +232,60 @@ export function SkillsSection() {
             </StaggerCard>
           </div>
         </Reveal>
+
+        {/* Tools & Currently Learning Strip (Git/GitHub, VS Code, React, Tailwind) */}
+        <div className="rounded-[20px] border border-slate-200 dark:border-emerald-900/50 bg-[#F8FAF9]/95 dark:bg-[#0C1D15]/95 p-6 sm:p-7">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+            <h3 className="font-display text-lg font-bold text-slate-900 dark:text-white">
+              Developer Tools &amp; Frameworks Learning
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-emerald-200/70">
+              Git / GitHub · VS Code · React · Tailwind CSS
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {TOOLS_AND_LEARNING.map((tool, idx) => {
+              const Icon = TOOL_ICONS[idx] ?? Terminal;
+              const isLearning = tool.level === 'Learning';
+              return (
+                <StaggerCard
+                  key={tool.name}
+                  index={idx}
+                  className="rounded-[12px] border border-slate-200 dark:border-emerald-900/50 bg-white dark:bg-[#06110C] p-4 flex flex-col justify-between gap-2"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Icon
+                        className={`w-4 h-4 shrink-0 ${
+                          isLearning
+                            ? 'text-[#C2410C] dark:text-[#FB923C]'
+                            : 'text-[#15803D] dark:text-[#4ADE80]'
+                        }`}
+                        aria-hidden="true"
+                      />
+                      <span className="font-display text-sm font-semibold text-slate-900 dark:text-white">
+                        {tool.name}
+                      </span>
+                    </div>
+                    <span
+                      className={`text-[11px] font-medium ${
+                        isLearning
+                          ? 'text-[#C2410C] dark:text-[#FB923C]'
+                          : 'text-[#15803D] dark:text-[#4ADE80]'
+                      }`}
+                    >
+                      {tool.level}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-emerald-100/70 leading-relaxed">
+                    {tool.detail}
+                  </p>
+                </StaggerCard>
+              );
+            })}
+          </div>
+        </div>
 
         {/* Continuous Moving Practical Craft Cards Stream (pauses on hover/focus) */}
         <div

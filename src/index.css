@@ -280,3 +280,29 @@
     transition: none !important;
   }
 }
+
+html[data-reduce-motion="true"] {
+  scroll-behavior: auto;
+}
+
+html[data-reduce-motion="true"] .animate-float-slow,
+html[data-reduce-motion="true"] .animate-float-slow-reverse,
+html[data-reduce-motion="true"] .animate-card-bob,
+html[data-reduce-motion="true"] .animate-ambient-pulse,
+html[data-reduce-motion="true"] .animate-orbit-drift,
+html[data-reduce-motion="true"] .animate-orbit-drift-reverse,
+html[data-reduce-motion="true"] .animate-grid-drift,
+html[data-reduce-motion="true"] .animate-spin-slow,
+html[data-reduce-motion="true"] .animate-spin-reverse-slow,
+html[data-reduce-motion="true"] .animate-marquee,
+html[data-reduce-motion="true"] .animate-marquee-reverse,
+html[data-reduce-motion="true"] .animate-cards-stream,
+html[data-reduce-motion="true"] .animate-caret-blink {
+  animation: none !important;
+}
+
+html[data-reduce-motion="true"] .reveal-item {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
